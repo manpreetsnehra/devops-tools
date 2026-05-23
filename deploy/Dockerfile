@@ -37,7 +37,7 @@ RUN ls -l && sudo cp * /usr/local/bin/
 USER runner
 WORKDIR /home/runner
 
-RUN /usr/local/bin/helm plugin install https://github.com/databus23/helm-diff && helmfile init --force && sudo rm .cache -rf
+RUN /usr/local/bin/helm plugin install https://github.com/databus23/helm-diff --verify=false && helmfile init --force && sudo rm .cache -rf
 
 RUN echo "    StrictHostKeyChecking no" | sudo tee -a /etc/ssh/ssh_config
 
