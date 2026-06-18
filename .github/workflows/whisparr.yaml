@@ -40,6 +40,6 @@ jobs:
       with:
         context: whisparr
         push: true
-        tags: ghcr.io/iaacautomation/whisparr:latest
+        tags: ghcr.io/manpreetsnehra/whisparr:latest
         platforms: linux/amd64
         build-args: CHANNEL=nightly

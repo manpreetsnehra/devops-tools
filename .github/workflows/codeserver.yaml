@@ -40,5 +40,5 @@ jobs:
       with:
         context: codeserver
         push: true
-        tags: ghcr.io/iaacautomation/codeserver:latest
+        tags: ghcr.io/manpreetsnehra/codeserver:latest
         platforms: linux/amd64

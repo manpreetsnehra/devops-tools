@@ -57,7 +57,7 @@ jobs:
       with:
         context: deploy-azure
         push: true
-        tags: ghcr.io/iaacautomation/deploy-azure:test
+        tags: ghcr.io/manpreetsnehra/deploy-azure:test
         platforms: linux/amd64,linux/arm64
         cache-from: type=gha
         cache-to: type=gha,mode=max
@@ -98,8 +98,8 @@ jobs:
         context: deploy-azure
         push: true
         tags: |
-          ghcr.io/iaacautomation/deploy-azure:${{steps.tag.outputs.tag}}
-          ghcr.io/iaacautomation/deploy-azure:latest
+          ghcr.io/manpreetsnehra/deploy-azure:${{steps.tag.outputs.tag}}
+          ghcr.io/manpreetsnehra/deploy-azure:latest
           ${{ secrets.GITLAB_REGISTRY_PATH }}/deploy-azure:latest
           ${{ secrets.DOCKERHUB_ACCOUNT }}/deploy-azure:${{steps.tag.outputs.tag}}
           ${{ secrets.DOCKERHUB_ACCOUNT }}/deploy-azure:latest
