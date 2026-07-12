@@ -1,0 +1,27 @@
+{{- with .Values.storage }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: "{{ $.Release.Name }}-{{ . }}"
+  namespace: {{ $.Release.Namespace }}
+{{- with .annotations  }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+{{- with .labels  }}
+  labels:
+{{ toYaml . | indent 4 }}
+{{- end }}
+spec:
+  accessModes:
+    - {{ .accessMode | default "ReadWriteOnce"}}
+  resources:
+    requests:
+      storage: {{ .size | quote | default "20Gi" }}
+  {{- if .volumeName }}
+  volumeName: {{ .volumeName }}
+  {{- end }}
+  {{- if .storageClass }}
+  storageClassName: {{ .storageClass }}
+  {{- end }}
+{{- end }}

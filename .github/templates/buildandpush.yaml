@@ -1,19 +1,31 @@
-name: Azure Deploy Docker Image
+name: Build and push immage
 on:
-  push:
-    paths:
-      - 'deploy-azure/**'
-      - '.github/workflows/deploy-azure.yaml'
-  schedule:
-      - cron: '0 0 * * 0'
-  
-jobs: 
+  workflow_call:
+    inputs:
+      target_dir:
+        type: string
+        required: true
+        description: Target dir for multirepo docker image
+      image_name:
+        type: string
+        required: true
+        description: Target Image name
+      build_args:
+        type: string
+        required: true
+        description: Docker image build args
+      platforms:
+        type: string
+        required: false
+        default: linux/amd64
+        description: Platforms to build image for
+jobs:
   release:
-    name: Build and Release Deploy Image
+    name: Build and Release ${{ inputs.target_dir }} Image
     runs-on: ubuntu-latest
     defaults:
       run:
-        shell: bash
+        shell: bash     
     permissions:
       id-token: write
       contents: write
@@ -24,7 +36,7 @@ jobs:
       uses: actions/checkout@v6
       with:
         fetch-depth: 0
-    
+
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v4
       with:
@@ -32,7 +44,7 @@ jobs:
     
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v4
-
+    
     - name: Log in to the Github Container registry
       uses: docker/login-action@v4
       with:
@@ -47,29 +59,24 @@ jobs:
         username: ${{ secrets.DOCKERHUB_ACCOUNT }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: Get latest Runner Version
-      id: versions
-      run: echo gitlab_tofu=`curl -s https://gitlab.com/api/v4/projects/53866919/releases/ | jq '.[]' | jq -r '.name' | head -1` >> $GITHUB_OUTPUT
-
-    - name: Test Build for deploy-azure
-      if: "${{ github.event_name == 'push' && ! contains(github.ref,'tag') }}"
+    - name: Test Build for ${{ inputs.target_dir }}
       uses: docker/build-push-action@v7
       with:
-        context: deploy-azure
-        push: true
-        tags: ghcr.io/manpreetsnehra/deploy-azure:test
-        platforms: linux/amd64,linux/arm64
+        context: ${{ inputs.target_dir }}
+        push: ${{ github.event_name == 'push' }}
+        tags: ghcr.io/manpreetsnehra/${{ inputs.target_dir }}:test
+        platforms: ${{ inputs.platforms }}
+        build-args: ${{ inputs.build_args }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
-        build-args: GITLAB_TOFU_VERSION=${{ steps.versions.outputs.gitlab_tofu }}
-
+ 
     - name: Get tag
       if: contains(github.ref,'tag')
       id: tag
       uses: devops-actions/action-get-tag@v1.0.1
       with:
         strip_v: true
-  
+
     - name: Log in to the Gitlab Container registry
       if: contains(github.ref,'tag')
       uses: docker/login-action@v4
@@ -91,22 +98,31 @@ jobs:
       if: contains(github.ref,'tag')
       run: aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ secrets.ECR_REPO_PATH }}
 
-    - name: Build and Push images
+    - name: Build and Push images to GitHub
       if: contains(github.ref,'tag')
       uses: docker/build-push-action@v7
       with:
-        context: deploy-azure
+        context: ${{ inputs.target_dir }}
+        push: true
+        tags: ${{ secrets.GITLAB_REGISTRY_PATH }}/${{ inputs.target_dir }}:latest
+        platforms: ${{ inputs.platforms }}
+        build-args: ${{ inputs.build_args }}
+        cache-from: type=gha
+
+    - name: Build and Push images to GitHub
+      if: contains(github.ref,'tag') && contains(inputs.target_dir,'deploy')
+      uses: docker/build-push-action@v7
+      with:
+        context: ${{ inputs.target_dir }}
         push: true
         tags: |
-          ghcr.io/manpreetsnehra/deploy-azure:${{steps.tag.outputs.tag}}
-          ghcr.io/manpreetsnehra/deploy-azure:latest
-          ${{ secrets.GITLAB_REGISTRY_PATH }}/deploy-azure:latest
-          ${{ secrets.DOCKERHUB_ACCOUNT }}/deploy-azure:${{steps.tag.outputs.tag}}
-          ${{ secrets.DOCKERHUB_ACCOUNT }}/deploy-azure:latest
-          ${{ secrets.ECR_REPO_PATH }}/deploy-azure:${{steps.tag.outputs.tag}}
-          ${{ secrets.ECR_REPO_PATH }}/deploy-azure:latest
-        platforms: linux/amd64 ,linux/arm64
+          ghcr.io/manpreetsnehra/${{ inputs.target_dir }}:${{steps.tag.outputs.tag}}
+          ghcr.io/manpreetsnehra/${{ inputs.target_dir }}:latest
+          ${{ secrets.DOCKERHUB_ACCOUNT }}/${{ inputs.target_dir }}:${{steps.tag.outputs.tag}}
+          ${{ secrets.DOCKERHUB_ACCOUNT }}/${{ inputs.target_dir }}:latest
+          ${{ secrets.ECR_REPO_PATH }}/${{ inputs.target_dir }}:${{steps.tag.outputs.tag}}
+          ${{ secrets.ECR_REPO_PATH }}/${{ inputs.target_dir }}:latest
+        platforms: ${{ inputs.platforms }}
+        build-args: ${{ inputs.build_args }}
         cache-from: type=gha
-        build-args: |
-          GITLAB_TOFU_VERSION=${{ steps.versions.outputs.gitlab_tofu }}
-          TAG=${{steps.tag.outputs.tag}}
+

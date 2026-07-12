@@ -1,0 +1,67 @@
+name: Image for pipelines
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+    tags:
+      - '*'
+  schedule:
+      - cron: '0 0 * * 0'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs: 
+  release:
+    name: Build and Release Deploy Image
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    permissions:
+      id-token: write
+      contents: write
+      pull-requests: write
+      packages: write
+    steps:
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v47
+        with:
+          dir_names: true
+ 
+      - name: Get tag
+        if: contains(github.ref,'tag')
+        id: tag
+        uses: devops-actions/action-get-tag@v1.0.1
+        with:
+          strip_v: true
+
+      - name: Get latest Runner Version and set repos
+        id: versions
+        run: |
+          echo runner=`curl --silent "https://api.github.com/repos/actions/runner/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'|cut -b 2-` >> $GITHUB_OUTPUT
+          echo container_hooks=`curl --silent "https://api.github.com/repos/actions/runner-container-hooks/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'|cut -b 2-` >> $GITHUB_OUTPUT
+          echo helmfile=`curl --silent "https://api.github.com/repos/helmfile/helmfile/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'|cut -b 2-` >> $GITHUB_OUTPUT
+          echo kubectl=`curl -L -s https://dl.k8s.io/release/stable.txt` >> $GITHUB_OUTPUT
+          echo helm=`curl --silent "https://api.github.com/repos/helm/helm/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'` >> $GITHUB_OUTPUT
+          echo gitlab_tofu=`curl -s https://gitlab.com/api/v4/projects/53866919/releases/ | jq '.[]' | jq -r '.name' | head -1` >> $GITHUB_OUTPUT
+
+      - name: Build and Test image
+        strategy:
+          matrix:
+            target: ${{ steps.changed-files.outputs.all_changed_files }}
+        uses: ./.github/templates/multirepo.yaml
+        secrets: inherit
+        with:
+          build_args: |
+            RUNNER_VERSION=${{ steps.versions.outputs.runner }}
+            RUNNER_CONTAINER_HOOKS_VERSION=${{ steps.versions.outputs.container_hooks }}
+            HELMFILE_VERSION=${{ steps.versions.outputs.helmfile }}
+            KUBECTL_VERSION=${{ steps.versions.outputs.kubectl }}
+            HELM_VERSION=${{ steps.versions.outputs.helm }}
+            GITLAB_TOFU_VERSION=${{ steps.versions.outputs.gitlab_tofu }}
+            TAG=${{ steps.tag.outputs.tag }}
+          target_dir: ${{ matrix.target }}
