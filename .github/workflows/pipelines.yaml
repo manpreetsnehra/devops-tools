@@ -1,6 +1,8 @@
 name: Image for pipelines
 on:
   pull_request:
+    paths-ignore:
+      - '*.md'
   push:
     branches:
       - master
@@ -14,7 +16,25 @@ concurrency:
   cancel-in-progress: true
 
 jobs: 
-  release:
+  changed-images:
+    name: Build and Release Deploy Image
+    runs-on: ubuntu-latest
+    outputs:
+      images: ${{ fromJSON(steps.changed-files.outputs.all_changed_files) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v47
+        with:
+          dir_names: true
+
+  build-images:
+    needs: changed-images
     name: Build and Release Deploy Image
     runs-on: ubuntu-latest
     defaults:
@@ -25,13 +45,10 @@ jobs:
       contents: write
       pull-requests: write
       packages: write
+    strategy:
+      matrix:
+        target: ${{ needs.changed-images.outputs.images }}    
     steps:
-      - name: Get changed files
-        id: changed-files
-        uses: tj-actions/changed-files@v47
-        with:
-          dir_names: true
- 
       - name: Get tag
         if: contains(github.ref,'tag')
         id: tag
@@ -50,9 +67,6 @@ jobs:
           echo gitlab_tofu=`curl -s https://gitlab.com/api/v4/projects/53866919/releases/ | jq '.[]' | jq -r '.name' | head -1` >> $GITHUB_OUTPUT
 
       - name: Build and Test image
-        strategy:
-          matrix:
-            target: ${{ steps.changed-files.outputs.all_changed_files }}
         uses: ./.github/templates/multirepo.yaml
         secrets: inherit
         with:
