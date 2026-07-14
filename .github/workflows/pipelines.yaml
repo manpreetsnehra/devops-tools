@@ -65,7 +65,7 @@ jobs:
           echo kubectl=`curl -L -s https://dl.k8s.io/release/stable.txt` >> $GITHUB_OUTPUT
           echo helm=`curl --silent "https://api.github.com/repos/helm/helm/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'` >> $GITHUB_OUTPUT
           echo gitlab_tofu=`curl -s https://gitlab.com/api/v4/projects/53866919/releases/ | jq '.[]' | jq -r '.name' | head -1` >> $GITHUB_OUTPUT
-
+          echo tfsec=`curl --silent "https://api.github.com/repos/aquasecurity/tfsec/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'|cut -b 2-` >> $GITHUB_OUTPUT
       - name: Build and Test image
         uses: ./.github/templates/multirepo.yaml
         secrets: inherit
@@ -77,5 +77,6 @@ jobs:
             KUBECTL_VERSION=${{ steps.versions.outputs.kubectl }}
             HELM_VERSION=${{ steps.versions.outputs.helm }}
             GITLAB_TOFU_VERSION=${{ steps.versions.outputs.gitlab_tofu }}
+            TFSEC_VERSION=${{ steps.versions.outputs.tfsec }}
             TAG=${{ steps.tag.outputs.tag }}
           target_dir: ${{ matrix.target }}
