@@ -6,9 +6,8 @@ on:
 
 jobs:
   defaults:
-    run:
-      shell: bash
-      working-directory: comfyui/chart
+    shell: bash
+    working-directory: comfyui/chart
   release:
     name: Build and push helm chart
     runs-on: ubuntu-latest
