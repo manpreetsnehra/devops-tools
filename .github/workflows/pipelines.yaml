@@ -70,8 +70,8 @@ jobs:
          
       - name: Build and Test image
         uses: ./.github/templates/multirepo.yaml
-        secrets: inherit
         with:
+          secrets: inherit
           build_args: |
             RUNNER_VERSION=${{ steps.versions.outputs.runner }}
             RUNNER_CONTAINER_HOOKS_VERSION=${{ steps.versions.outputs.container_hooks }}
