@@ -5,10 +5,10 @@ on:
       - 'comfyui/chart/**'
 
 jobs:
-  defaults:
-    shell: bash
-    working-directory: comfyui/chart
   release:
+    defaults:
+      shell: bash
+      working-directory: comfyui/chart
     name: Build and push helm chart
     runs-on: ubuntu-latest
     permissions:
