@@ -26,6 +26,11 @@ jobs:
     defaults:
       run:
         shell: bash     
+    env:
+      github: "ghcr.io/manpreetsnehra/${{ inputs.target_dir }}"
+      dockerhub: "${{ secrets.DOCKERHUB_ACCOUNT }}/${{ inputs.target_dir }}"
+      ecr: "${{ secrets.ECR_REPO_PATH }}/${{ inputs.target_dir }}          "
+      gitlab: "${{ secrets.GITLAB_REGISTRY_PATH }}/${{ inputs.target_dir }}"
     permissions:
       id-token: write
       contents: write
@@ -99,17 +104,6 @@ jobs:
       run: aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ secrets.ECR_REPO_PATH }}
 
     - name: Build and Push images to GitHub
-      if: contains(github.ref,'tag')
-      uses: docker/build-push-action@v7
-      with:
-        context: ${{ inputs.target_dir }}
-        push: true
-        tags: ${{ secrets.GITLAB_REGISTRY_PATH }}/${{ inputs.target_dir }}:latest
-        platforms: ${{ inputs.platforms }}
-        build-args: ${{ inputs.build_args }}
-        cache-from: type=gha
-
-    - name: Build and Push images to GitHub
       if: contains(github.ref,'tag') && contains(inputs.target_dir,'deploy')
       uses: docker/build-push-action@v7
       with:
@@ -122,6 +116,7 @@ jobs:
           ${{ secrets.DOCKERHUB_ACCOUNT }}/${{ inputs.target_dir }}:latest
           ${{ secrets.ECR_REPO_PATH }}/${{ inputs.target_dir }}:${{steps.tag.outputs.tag}}
           ${{ secrets.ECR_REPO_PATH }}/${{ inputs.target_dir }}:latest
+          ${{ secrets.GITLAB_REGISTRY_PATH }}/${{ inputs.target_dir }}:latest
         platforms: ${{ inputs.platforms }}
         build-args: ${{ inputs.build_args }}
         cache-from: type=gha

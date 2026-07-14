@@ -21,6 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       images: ${{ fromJSON(steps.changed-files.outputs.all_changed_files) }}
+      tag: ${{ steps.tag.outputs.tag }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -66,6 +67,7 @@ jobs:
           echo helm=`curl --silent "https://api.github.com/repos/helm/helm/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'` >> $GITHUB_OUTPUT
           echo gitlab_tofu=`curl -s https://gitlab.com/api/v4/projects/53866919/releases/ | jq '.[]' | jq -r '.name' | head -1` >> $GITHUB_OUTPUT
           echo tfsec=`curl --silent "https://api.github.com/repos/aquasecurity/tfsec/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'|cut -b 2-` >> $GITHUB_OUTPUT
+         
       - name: Build and Test image
         uses: ./.github/templates/multirepo.yaml
         secrets: inherit
