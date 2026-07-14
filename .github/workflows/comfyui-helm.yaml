@@ -4,11 +4,13 @@ on:
     paths:
       - 'comfyui/chart/**'
 
+defaults:
+  run: 
+    shell: bash
+    working-directory: comfyui/chart
+
 jobs:
   release:
-    defaults:
-      shell: bash
-      working-directory: comfyui/chart
     name: Build and push helm chart
     runs-on: ubuntu-latest
     permissions:
