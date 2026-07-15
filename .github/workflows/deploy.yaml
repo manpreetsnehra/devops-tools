@@ -150,7 +150,7 @@ jobs:
       - name: Build and Push images to GitHub
         uses: docker/build-push-action@v7
         with:
-          context: ${{  }}
+          context: deploy
           push: true
           labels: ${{ steps.meta.outputs.labels }}
           tags: |
