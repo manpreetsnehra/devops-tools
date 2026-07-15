@@ -32,14 +32,13 @@ jobs:
         id: changed-files
         uses: tj-actions/changed-files@v47
         with:
+          dir_name: true
           dir_names_exclude_current_dir: true
-          dir_names_max_depth: 0
           matrix: true
           files_ignore: |
             charts/**
             deploy/**
             .github/**
-            .releaserc
 
       - name: Get latest Runner Version and set repos
         id: versions
