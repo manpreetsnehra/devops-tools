@@ -14,11 +14,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       images: ${{ steps.changed-files.outputs.all_changed_files }}
-      kubectl: ${{ steps.versions.outputs.kubectl }}
-      helm: ${{ steps.versions.outputs.helm }}
-      codeserver: ${{ steps.versions.outputs.codeserver }}
-      ghcli: ${{ steps.versions.outputs.ghcli }}
-      whisparr: ${{ steps.versions.outputs.whisparr }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -36,15 +31,6 @@ jobs:
             charts/**
             deploy/**
             .github/**
-
-      - name: Get latest Runner Version and set repos
-        id: versions
-        run: |
-          echo kubectl=`curl -L -s https://dl.k8s.io/release/stable.txt` >> $GITHUB_OUTPUT
-          echo helm=`curl --silent "https://api.github.com/repos/helm/helm/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'` >> $GITHUB_OUTPUT
-          echo codeserver=$(curl -s "https://api.github.com/repos/coder/code-server/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'|cut -b 2-) >> $GITHUB_OUTPUT
-          echo ghcli=$(curl -s "https://api.github.com/repos/cli/cli/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'|cut -b 2-) >> $GITHUB_OUTPUT
-          echo whisparr=$(curl --silent https://api.github.com/repos/Whisparr/Whisparr/releases | jq -r 'map(select(.prerelease)) | first | .tag_name' | cut -b 2-) >> $GITHUB_OUTPUT
 
   test-image:
     name: Build and Test Container Images
@@ -90,11 +76,5 @@ jobs:
           sbom: true
           tags: ghcr.io/${{ github.repository_owner }}/${{ matrix.target }}:test
           platforms: linux/amd64
-          build-args: |
-            KUBECTL_VERSION=${{ needs.changed-images.outputs.kubectl }}
-            HELM_VERSION=${{ needs.changed-images.outputs.helm }}
-            CODESERVER_VERSION=${{ needs.changed-images.outputs.codeserver }}
-            GHCLI_VERSION=${{ needs.changed-images.outputs.ghcli }}
-            WHISPARR_VERSION=${{ needs.changed-images.outputs.whisparr }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

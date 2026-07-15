@@ -29,8 +29,6 @@ for MODEL_DIRECTORY in ${MODEL_DIRECTORIES[@]}; do
 done
 
 ## Get Versions
-COMFYUI_VERSION=`curl --silent "https://api.github.com/repos/Comfy-Org/ComfyUI/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'|cut -b 2-`
-COMFYUI_DISTRIBUTED_VERSION=`curl --silent "https://api.github.com/repos/robertvoy/ComfyUI-Distributed/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'|cut -b 2-`
 
 ## Get ComfyUI
 if [[ ! -d ${DEPLOY_DIR}/ui ]] || [[ $COMFYUI_VERSION != $(cat ${INSTALL_DIR}/COMFYUI_INSTALLED_VERSION) ]]

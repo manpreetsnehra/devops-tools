@@ -38,11 +38,6 @@ jobs:
       - name: Get latest Runner Version and set repos
         id: versions
         run: |
-          echo kubectl=`curl -L -s https://dl.k8s.io/release/stable.txt` >> $GITHUB_OUTPUT
-          echo helm=`curl --silent "https://api.github.com/repos/helm/helm/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'` >> $GITHUB_OUTPUT
-          echo codeserver=$(curl -s "https://api.github.com/repos/coder/code-server/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'|cut -b 2-) >> $GITHUB_OUTPUT
-          echo ghcli=$(curl -s "https://api.github.com/repos/cli/cli/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'|cut -b 2-) >> $GITHUB_OUTPUT
-          echo whisparr=$(curl --silent https://api.github.com/repos/Whisparr/Whisparr/releases | jq -r 'map(select(.prerelease)) | first | .tag_name' | cut -b 2-) >> $GITHUB_OUTPUT
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v4
@@ -78,12 +73,6 @@ jobs:
             ${{ secrets.GITLAB_REGISTRY_PATH }}/${{ matrix.image }}:latest
             ${{ secrets.GITLAB_REGISTRY_PATH }}/${{ matrix.image }}:${{ steps.meta.outputs.tag }}
           platforms: linux/amd64
-          build-args: |
-            KUBECTL_VERSION=${{ steps.versions.outputs.kubectl }}
-            HELM_VERSION=${{ steps.versions.outputs.helm }}
-            CODESERVER_VERSION=${{ steps.versions.outputs.codeserver }}
-            GHCLI_VERSION=${{ steps.versions.outputs.ghcli }}
-            WHISPARR_VERSION=${{ steps.versions.outputs.whisparr }}
           cache-from: type=gha
 
       - name: Run Trivy vulnerability scanner

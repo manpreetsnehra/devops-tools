@@ -27,6 +27,7 @@ RUN apt-get update && \
     apt-get clean \
     && \
     rm -rf /var/lib/apt/lists/* && \
+    export WHISPARR_VERSION=$(curl --silent https://api.github.com/repos/Whisparr/Whisparr/releases | jq -r 'map(select(.prerelease)) | first | .tag_name' | cut -b 2-) && \
     echo https://github.com/Whisparr/Whisparr/releases/download/v${WHISPARR_VERSION}/Whisparr.${WHISPARR_VERSION}.linux-x64.tar.gz && \
     wget -O whisparr.tar.gz -q https://github.com/Whisparr/Whisparr/releases/download/v${WHISPARR_VERSION}/Whisparr.${WHISPARR_VERSION}.linux-x64.tar.gz && \
     mkdir -p /app/bin && \
@@ -38,6 +39,9 @@ RUN apt-get update && \
     chmod -R 755 /app && \
     rm -rf /tmp/*
 
+LABEL org.opencontainers.image.source="https://github.com/Whisparr/Whisparr"
+LABEL org.opencontainers.image.version=${WHISPARR_VERSION}
+
 COPY entrypoint.sh /entrypoint.sh
 
 USER nobody:nogroup
@@ -47,4 +51,3 @@ VOLUME ["/config"]
 ENTRYPOINT ["/usr/bin/catatonit", "--"]
 CMD ["/entrypoint.sh"]
 
-LABEL org.opencontainers.image.source="https://github.com/Whisparr/Whisparr"

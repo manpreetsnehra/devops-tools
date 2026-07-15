@@ -9,8 +9,8 @@ RUN apt-get update -y && \
 RUN useradd -u 1000 -d /opt/comfy comfy
 
 # Defines build arguments for the versions of ComfyUI and ComfyUI Manager to use
-ARG COMFYUI_VERSION
-ARG COMFYUI_DISTRIBUTED_VERSION
+RUN export COMFYUI_VERSION=`curl --silent "https://api.github.com/repos/Comfy-Org/ComfyUI/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'|cut -b 2-` && \
+    export COMFYUI_DISTRIBUTED_VERSION=`curl --silent "https://api.github.com/repos/robertvoy/ComfyUI-Distributed/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'|cut -b 2-`
 
 USER comfy
 
