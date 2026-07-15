@@ -27,9 +27,6 @@ jobs:
           matrix: true          
           diff_relative: true
           path: 'charts'
-      
-      - name: Debu
-        run: echo ${{ steps.changed-files.outputs.all_changed_files }}
           
   test-chart:
     needs: changed-charts
@@ -44,7 +41,7 @@ jobs:
       packages: write
     strategy:
       matrix: 
-        chart: ${{ needs.changed-charts.outputs.charts }}
+        chart: ${{ fromJSON(needs.changed-charts.outputs.charts) }}
     steps:
     - name: Checkout
       uses: actions/checkout@v6
