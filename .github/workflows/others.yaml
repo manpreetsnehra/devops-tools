@@ -53,7 +53,7 @@ jobs:
   test-image:
     name: Build and Test Deploy Image
     if: github.even_name == 'pull_request'
-    needs: changed-files
+    needs: changed-images
     runs-on: ubuntu-latest
     permissions:
       contents: read
