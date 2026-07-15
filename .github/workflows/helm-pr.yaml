@@ -25,7 +25,10 @@ jobs:
           dir_names_exclude_current_dir: true
           matrix: true
           files: 'charts'
-
+      
+      - name: Debu
+        run: echo ${{ steps.changed-files.outputs.all_changed_files }}
+          
   test-chart:
     needs: changed-charts
     name: Build and push helm chart
