@@ -35,12 +35,10 @@ jobs:
           dir_names_exclude_current_dir: true
           dir_names_max_depth: 1
           matrix: true
-          json: true
           files_ignore: |
             charts/**
             deploy/**
             .github/**
-
 
       - name: Get latest Runner Version and set repos
         id: versions
@@ -61,7 +59,7 @@ jobs:
       packages: write
     strategy:
       matrix:
-        target: ${{ needs.changed-images.outputs.images }}
+        target: ${{ fromJSON(needs.changed-images.outputs.images) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
