@@ -1,12 +1,10 @@
-name: Comfyui Helm Chart
+name: Publish Helm charts
 on:
   push:
     paths:
       - 'charts/**'
-
-defaults:
-  run: 
-    shell: bash
+    branch:
+      - 'master'
 
 jobs:
   changed-charts:

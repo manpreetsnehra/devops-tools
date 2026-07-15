@@ -79,3 +79,14 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: CODER_USER=${{ secrets.CODER_USER }}
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: 'ghcr.io/${{ github.repository_owner }}/${{ matrix.target }}:test'
+          format: json
+          output: trivy-results.json
+
+      - name: Post Trivy results as PR comment
+        uses: aarontravass/trivy-pr-comment@v0
+          

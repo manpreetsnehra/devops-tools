@@ -1,12 +1,8 @@
-name: Comfyui Helm Chart
+name: Test Helm Chart
 on:
   pull_request:
     paths:
       - 'charts/**'
-
-defaults:
-  run: 
-    shell: bash
 
 jobs:
   changed-charts:
