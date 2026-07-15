@@ -1,4 +1,4 @@
-name: Image for Deploy pipelines
+name: Image for CI/CD pipelines
 on:
   pull_request:
     paths:
@@ -8,13 +8,9 @@ on:
       - deploy/**
     tags:
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}-deploy
-  cancel-in-progress: true
-
 jobs: 
   test-image:
-    name: Build and Test Deploy Image
+    name: Build and Test CI/CD Image
     runs-on: ubuntu-latest
     if: ! contains(github.ref,'tag')
     permissions:
@@ -76,7 +72,7 @@ jobs:
 
   build-n-publish:
     if: contains(github.ref,'tag')
-    name: Build and Release Deploy Image
+    name: Build and Release CI/CD Image
     runs-on: ubuntu-latest
     permissions:
       contents: write

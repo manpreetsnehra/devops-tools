@@ -1,4 +1,4 @@
-name: Images for kubernetes
+name: Images for Kubernetes pods
 on:
   pull_request:
     paths-ignore:
@@ -11,14 +11,10 @@ on:
   schedule:
     - cron: "0 2 * * 0"
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}-others
-  cancel-in-progress: true
-
 jobs: 
   changed-images:
     if: github.even_name == 'pull_request'
-    name: Build and Release Deploy Image
+    name: Get Changed Files for Testing
     runs-on: ubuntu-latest
     outputs:
       images: ${{ fromJSON(steps.changed-files.outputs.all_changed_files) }}
@@ -47,7 +43,7 @@ jobs:
           echo ghcli=$(curl -s "https://api.github.com/repos/cli/cli/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'|cut -b 2-) >> $GITHUB_OUTPUT
 
   test-image:
-    name: Build and Test Deploy Image
+    name: Build and Test Container Images
     if: github.even_name == 'pull_request'
     needs: changed-images
     runs-on: ubuntu-latest
@@ -96,7 +92,7 @@ jobs:
 
   build-n-publish:
     if: contains(github.ref,'master')
-    name: Build and Release Deploy Image
+    name: Build and Release Container Image
     runs-on: ubuntu-latest
     permissions:
       contents: read
