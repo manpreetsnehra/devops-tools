@@ -109,10 +109,11 @@ jobs:
       id-token: write
     strategy:
       matrix:
-        - codeserver
-        - comfyui
-        - nginx
-        - whisparr
+        image:
+          - codeserver
+          - comfyui
+          - nginx
+          - whisparr
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -152,14 +153,14 @@ jobs:
       - name: Build and Push images to GitHub
         uses: docker/build-push-action@v7
         with:
-          context: ${{ matrix.target }}
+          context: ${{ matrix.image }}
           push: true
           labels: org.opencontainers.image.created={{commit_date 'YYYY-MM-DDTHH:mm:ss.SSS[Z]'}}
           tags: |
-            ghcr.io/${{ github.repository_owner }}/${{ matrix.target }}:${{ steps.meta.outputs.tag }}
-            ghcr.io/${{ github.repository_owner }}/${{ matrix.target }}:latest
-            ${{ secrets.GITLAB_REGISTRY_PATH }}/${{ matrix.target }}:latest
-            ${{ secrets.GITLAB_REGISTRY_PATH }}/${{ matrix.target }}:${{ steps.meta.outputs.tag }}
+            ghcr.io/${{ github.repository_owner }}/${{ matrix.image }}:${{ steps.meta.outputs.tag }}
+            ghcr.io/${{ github.repository_owner }}/${{ matrix.image }}:latest
+            ${{ secrets.GITLAB_REGISTRY_PATH }}/${{ matrix.image }}:latest
+            ${{ secrets.GITLAB_REGISTRY_PATH }}/${{ matrix.image }}:${{ steps.meta.outputs.tag }}
           platforms: linux/amd64
           build-args: |
             KUBECTL_VERSION=${{ steps.versions.outputs.kubectl }}
