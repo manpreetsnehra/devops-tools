@@ -66,7 +66,7 @@ RUN export CODESERVER_VERSION=$(curl -s "https://api.github.com/repos/coder/code
 
 RUN curl -fsSL https://get.opentofu.org/install-opentofu.sh -o install-opentofu.sh && \
     curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-4 && \
-    bash -x get_helm.sh && bash -x install-opentofu.sh --install-method standalone && \
+    bash get_helm.sh && bash install-opentofu.sh --install-method standalone && \
     rm -f install-opentofu.sh get_helm.sh
 
 
