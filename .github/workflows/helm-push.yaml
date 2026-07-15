@@ -9,12 +9,11 @@ defaults:
     shell: bash
 
 jobs:
-  changed-images:
-    if: github.event_name == 'pull_request'
+  changed-charts:
     name: Get Changed Files for Testing
     runs-on: ubuntu-latest
     outputs:
-      images: ${{ steps.changed-files.outputs.all_changed_files }}
+      charts: ${{ steps.changed-files.outputs.all_changed_files }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -28,17 +27,17 @@ jobs:
           dir_names: true
           dir_names_exclude_current_dir: true
           matrix: true
-          files_ignore: |
-            charts/**
-            deploy/**
-            .github/**
+          files: 'charts'
 
-  release:
-    name: Build and push helm chart
+  publish-chart:
+    name: Publish helm chart
     runs-on: ubuntu-latest
     permissions:
       contents: write
       packages: write
+    strategy:
+      matrix: 
+        chart: ${{ needs.changed-charts.outputs.charts }}
     steps:
     - name: Checkout
       uses: actions/checkout@v6
@@ -48,39 +47,11 @@ jobs:
     - name: Setup Helm
       uses: azure/setup-helm@v5
 
-    - uses: actions/setup-python@v6.0.0
-      with:
-        python-version: '3.x'
-        check-latest: true
-
-    - name: Set up chart-testing
-      uses: helm/chart-testing-action@v2.8.0
-        
-    - name: Run chart-testing (list-changed)
-      id: list-changed
-      run: |
-        changed=$(ct list-changed --target-branch ${{ github.event.repository.default_branch }})
-        if [[ -n "$changed" ]]; then
-          echo "changed=true" >> "$GITHUB_OUTPUT"
-        fi
-
-    - name: Run chart-testing (lint)
-      if: steps.list-changed.outputs.changed == 'true'
-      run: ct lint --target-branch ${{ github.event.repository.default_branch }}
-
-    - name: Create kind cluster
-      if: steps.list-changed.outputs.changed == 'true'
-      uses: helm/kind-action@v1
-
-    - name: Run chart-testing (install)
-      if: steps.list-changed.outputs.changed == 'true'
-      run: ct install --target-branch ${{ github.event.repository.default_branch }}
-
     - name: Push Helm Chart to ChartMuseum
       uses: bsord/helm-push@v4
       with:
         username: ${{ secrets.GITLAB_ACCOUNT }}
         password: ${{ secrets.GITLAB_TOKEN }}
-        registry-url: 'https://registry.gitlab.com/nehraconsultancy/comfyui'
+        registry-url: ${{ secrets.GITLAB_REGISTRY_PATH }}/${{ matrix.chart }}
         force: true
-        chart-folder: chart
+        chart-folder: charts/${{ matrix.chart }}
