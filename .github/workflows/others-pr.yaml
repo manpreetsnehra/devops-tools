@@ -88,5 +88,5 @@ jobs:
           output: trivy-results.json
 
       - name: Post Trivy results as PR comment
-        uses: aarontravass/trivy-pr-comment@v0
+        uses: aarontravass/trivy-pr-comment@v0.0.3
           
