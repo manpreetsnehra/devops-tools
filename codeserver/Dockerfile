@@ -59,18 +59,16 @@ RUN wget --quiet -O /usr/local/bin/kubectl "https://dl.k8s.io/release/$(curl -L 
 
 RUN export CODESERVER_VERSION=$(curl -s "https://api.github.com/repos/coder/code-server/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'|cut -b 2-) && \
     wget -q https://github.com/coder/code-server/releases/download/v${CODESERVER_VERSION}/code-server_${CODESERVER_VERSION}_amd64.deb && \
-    GHCLI_VERSION=$(curl -s "https://api.github.com/repos/cli/cli/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'|cut -b 2-) \
+    export GHCLI_VERSION=$(curl -s "https://api.github.com/repos/cli/cli/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'|cut -b 2-) \
     wget https://github.com/cli/cli/releases/download/v${GHCLI_VERSION}/gh_${GHCLI_VERSION}_linux_amd64.deb && \
     dpkg -i code-server*_amd64.deb ghcli*.deb && \
     rm *.deb
 
 RUN curl -fsSL https://get.opentofu.org/install-opentofu.sh -o install-opentofu.sh && \
-    chmod +x install-opentofu.sh get_helm.sh && \
+    curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-4 && \
     bash -x get_helm.sh && bash -x install-opentofu.sh --install-method standalone && \
     rm -f install-opentofu.sh get_helm.sh
 
-
-LABEL org.opencontainers.image.version=${CODESERVER_VERSION}
 
 EXPOSE 8080
 # This way, if someone sets $DOCKER_USER, docker-exec will still work as
