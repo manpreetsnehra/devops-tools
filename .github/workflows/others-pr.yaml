@@ -83,7 +83,7 @@ jobs:
       - name: Test Build for ${{ matrix.target }}
         uses: docker/build-push-action@v7
         with:
-          context: ${{ inputs.target_dir }}
+          context: ${{ matrix.target }}
           push: false
           sbom: true
           tags: ghcr.io/${{ github.repository_owner }}/${{ matrix.target }}:test
@@ -91,7 +91,7 @@ jobs:
           build-args: |
             KUBECTL_VERSION=${{ needs.changed-images.outputs.kubectl }}
             HELM_VERSION=${{ needs.changed-images.outputs.helm }}
-            GITLAB_TOFU_VERSION=${{ needs.changed-images.outputs.gitlab_tofu }}
+            CODESERVER_VERSION=${{ needs.changed-images.outputs.codeserver }}
             TFSEC_VERSION=${{ needs.changed-images.outputs.tfsec }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

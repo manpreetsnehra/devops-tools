@@ -10,7 +10,7 @@ ARG TFSEC_VERSION
 ARG KUBECTL_VERSION
 ARG HELM_VERSION
 ARG CODER_USER
-ARG CODE_SERVER_VERSION
+ARG CODESERVER_VERSION
 
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y \
@@ -61,7 +61,7 @@ RUN wget --quiet -O /usr/local/bin/kubectl "https://dl.k8s.io/release/${KUBECTL_
     wget --quiet -O /usr/local/bin/tfsec https://github.com/aquasecurity/tfsec/releases/download/v${TFSEC_VERSION}/tfsec-linux-amd64 && \    
     chmod +x /usr/local/bin/* 
   
-RUN wget -q https://github.com/coder/code-server/releases/download/v${CODE_SERVER_VERSION}/code-server_${CODE_SERVER_VERSION}_amd64.deb && \
+RUN wget -q https://github.com/coder/code-server/releases/download/v${CODESERVER_VERSION}/code-server_${CODESERVER_VERSION}_amd64.deb && \
     dpkg -i code-server*_amd64.deb && \
     rm *.deb
 
@@ -70,7 +70,7 @@ RUN curl -fsSL https://get.opentofu.org/install-opentofu.sh -o install-opentofu.
     bash -x get_helm.sh && bash -x install-opentofu.sh --install-method standalone && \
     rm -f install-opentofu.sh get_helm.sh
 
-LABEL org.opencontainers.image.version=${CODE_SERVER_VERSION}
+LABEL org.opencontainers.image.version=${CODESERVER_VERSION}
 
 EXPOSE 8080
 # This way, if someone sets $DOCKER_USER, docker-exec will still work as
