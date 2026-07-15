@@ -34,6 +34,10 @@ RUN curl -fsSL https://get.opentofu.org/install-opentofu.sh -o install-opentofu.
     && sudo ./install-opentofu.sh --install-method standalone --skip-verify \
     && rm -f install-opentofu.sh
 RUN sudo mv kubectl gitlab-tofu /usr/local/bin/
+RUN wget https://github.com/helmfile/helmfile/releases/download/v${HELMFILE_VERSION}/helmfile_${HELMFILE_VERSION}_linux_amd64.tar.gz && \
+    tar xvfz helmfile_${HELMFILE_VERSION}_linux_amd64.tar.gz && \
+    sudo mv helmfile /usr/local/bin/ && \
+    sudo rm README.* CHANGELOG.* helmfile_*
 RUN sudo chmod +x /usr/local/bin/*
 
 RUN curl -sfL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && unzip -qq awscliv2.zip && sudo ./aws/install && rm awscliv2.zip aws -rf
