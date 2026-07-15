@@ -14,11 +14,11 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       images: ${{ steps.changed-files.outputs.all_changed_files }}
-      kubectl: ${{ steps.outputs.versions.kubectl }}
-      helm: ${{ steps.outputs.versions.helm }}
-      codeserver: ${{ steps.outputs.versions.codeserver }}
-      ghcli: ${{ steps.outputs.versions.ghcli }}
-      whisparr: ${{ steps.outputs.versions.whisparr }}
+      kubectl: ${{ steps.versions.outputs.kubectl }}
+      helm: ${{ steps.versions.outputs.helm }}
+      codeserver: ${{ steps.versions.outputs.codeserver }}
+      ghcli: ${{ steps.versions.outputs.ghcli }}
+      whisparr: ${{ steps.versions.outputs.whisparr }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -62,8 +62,6 @@ jobs:
       matrix:
         target: ${{ fromJSON(needs.changed-images.outputs.images) }}
     steps:
-      - name: debug
-        run: echo ${{ toJSON(needs.changed-images.outputs) }}
       - name: Checkout
         uses: actions/checkout@v6
         with:
