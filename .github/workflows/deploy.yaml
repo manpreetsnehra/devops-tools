@@ -52,9 +52,9 @@ jobs:
       - name: Test Build for ${{ matrix.target }}
         uses: docker/build-push-action@v7
         with:
-          context: ${{ inputs.target_dir }}
+          context: deploy
           push: ${{ github.event_name == 'push' }}
-          tags: ghcr.io/manpreetsnehra/${{ matrix.target }}:test
+          tags: ghcr.io/${{ github.repository_owner }}/deploy:test
           platforms: linux/amd64
           build-args: |
             RUNNER_VERSION=${{ steps.versions.outputs.runner }}
@@ -147,14 +147,14 @@ jobs:
           push: true
           labels: ${{ steps.meta.outputs.labels }}
           tags: |
-            ghcr.io/manpreetsnehra/${{ inputs.target_dir }}:${{ steps.meta.outputs.tag }}
-            ghcr.io/manpreetsnehra/${{ inputs.target_dir }}:latest
-            ${{ secrets.DOCKERHUB_ACCOUNT }}/${{ inputs.target_dir }}:${{ steps.meta.outputs.tag }}
-            ${{ secrets.DOCKERHUB_ACCOUNT }}/${{ inputs.target_dir }}:latest
-            ${{ secrets.ECR_REPO_PATH }}/${{ inputs.target_dir }}:${{ steps.meta.outputs.tag }}
-            ${{ secrets.ECR_REPO_PATH }}/${{ inputs.target_dir }}:latest
-            ${{ secrets.GITLAB_REGISTRY_PATH }}/${{ inputs.target_dir }}:latest
-            ${{ secrets.GITLAB_REGISTRY_PATH }}/${{ inputs.target_dir }}:${{ steps.meta.outputs.tag }}
+            ghcr.io/${{ github.repository_owner }}/deploy:${{ steps.meta.outputs.tag }}
+            ghcr.io/${{ github.repostiory_owner }}/deploy:latest
+            ${{ secrets.DOCKERHUB_ACCOUNT }}/deploy:${{ steps.meta.outputs.tag }}
+            ${{ secrets.DOCKERHUB_ACCOUNT }}/deploy:latest
+            ${{ secrets.ECR_REPO_PATH }}/deploy:${{ steps.meta.outputs.tag }}
+            ${{ secrets.ECR_REPO_PATH }}/deploy:latest
+            ${{ secrets.GITLAB_REGISTRY_PATH }}/deploy:latest
+            ${{ secrets.GITLAB_REGISTRY_PATH }}/deploy:${{ steps.meta.outputs.tag }}
           platforms: linux/amd64
           build-args: |
             RUNNER_VERSION=${{ steps.versions.outputs.runner }}
