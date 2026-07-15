@@ -6,11 +6,7 @@ LABEL org.opencontainers.image.title="Code Server"
 LABEL org.opencontainers.image.description="Code Server with various apps inbuilt"
 LABEL org.opencontainers.image.licenses="MIT"
 
-ARG TFSEC_VERSION
-ARG KUBECTL_VERSION
-ARG HELM_VERSION
-ARG CODER_USER
-ARG CODESERVER_VERSION
+ARG CODER_USER=coder
 
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y \
