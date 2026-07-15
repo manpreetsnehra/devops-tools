@@ -31,7 +31,9 @@ jobs:
     name: Build and push helm chart
     runs-on: ubuntu-latest
     defaults:
-      working-directory: charts
+      run:
+        shell: bash
+        working-directory: charts
     permissions:
       contents: write
       packages: write
