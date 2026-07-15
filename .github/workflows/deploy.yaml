@@ -75,7 +75,7 @@ jobs:
           cache-to: type=gha,mode=max
 
   build-n-publish:
-    if: github.ref_type == 'tag'
+    if: contains(github.ref,'tag')
     name: Build and Release Deploy Image
     runs-on: ubuntu-latest
     permissions:
