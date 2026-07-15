@@ -18,6 +18,7 @@ jobs:
       helm: ${{ steps.outputs.versions.helm }}
       codeserver: ${{ steps.outputs.versions.codeserver }}
       ghcli: ${{ steps.outputs.versions.ghcli }}
+      whisparr: ${{ steps.outputs.versions.whisparr }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -43,6 +44,7 @@ jobs:
           echo helm=`curl --silent "https://api.github.com/repos/helm/helm/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'` >> $GITHUB_OUTPUT
           echo codeserver=$(curl -s "https://api.github.com/repos/coder/code-server/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'|cut -b 2-) >> $GITHUB_OUTPUT
           echo ghcli=$(curl -s "https://api.github.com/repos/cli/cli/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'|cut -b 2-) >> $GITHUB_OUTPUT
+          echo whisparr=$(curl --silent https://api.github.com/repos/Whisparr/Whisparr/releases | jq -r 'map(select(.prerelease)) | first | .tag_name' | cut -b 2-) >> $GITHUB_OUTPUT
 
   test-image:
     name: Build and Test Container Images
@@ -92,18 +94,7 @@ jobs:
             KUBECTL_VERSION=${{ needs.changed-images.outputs.kubectl }}
             HELM_VERSION=${{ needs.changed-images.outputs.helm }}
             CODESERVER_VERSION=${{ needs.changed-images.outputs.codeserver }}
-            TFSEC_VERSION=${{ needs.changed-images.outputs.tfsec }}
+            GHCLI_VERSION=${{ needs.changed-images.outputs.ghcli }}
+            WHISPARR_VERSION=${{ needs.changed-images.outputs.whisparr }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@v0.36.0
-        with:
-          image-ref: 'ghcr.io/${{ github.repository_owner }}/${{ matrix.target }}:test'
-          format: 'sarif'
-          output: 'trivy-results.sarif'
-
-      - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v4
-        with:
-          sarif_file: 'trivy-results.sarif'

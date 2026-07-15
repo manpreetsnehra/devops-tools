@@ -2,11 +2,12 @@ FROM public.ecr.aws/docker/library/debian:trixie-slim
 
 ARG TARGETPLATFORM
 ARG CHANNEL
+ARG WHISPARR_VERSION
 
 ENV COMPlus_EnableDiagnostics="0" \
     UMASK="0002" \
     TZ="Etc/UTC" \
-    DEBIAN_FRONTEND=noninteractive 
+    DEBIAN_FRONTEND=noninteractive
 
 USER root
 WORKDIR /app
@@ -26,7 +27,6 @@ RUN apt-get update && \
     apt-get clean \
     && \
     rm -rf /var/lib/apt/lists/* && \
-    export WHISPARR_VERSION=$(curl --silent https://api.github.com/repos/Whisparr/Whisparr/releases | jq -r 'map(select(.prerelease)) | first | .tag_name' | cut -b 2-) && \
     echo https://github.com/Whisparr/Whisparr/releases/download/v${WHISPARR_VERSION}/Whisparr.${WHISPARR_VERSION}.linux-x64.tar.gz && \
     wget -O whisparr.tar.gz -q https://github.com/Whisparr/Whisparr/releases/download/v${WHISPARR_VERSION}/Whisparr.${WHISPARR_VERSION}.linux-x64.tar.gz && \
     mkdir -p /app/bin && \
