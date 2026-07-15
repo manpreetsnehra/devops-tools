@@ -1,17 +1,13 @@
-name: Image for Deploy pipelines
+name: Images for kubernetes
 on:
   pull_request:
-    paths:
-      - codeserver/**
-      - whisparr/**
-      - nginx/**
-      - comfyui/**
+    paths-ignore:
+      - deploy/**
+      - charts/**
   push:
-    paths:
-      - codeserver/**
-      - whisparr/**
-      - nginx/**
-      - comfyui/**
+    paths-ignore:
+      - deploy/**
+      - charts/**
   schedule:
     - cron: "0 2 * * 0"
 
