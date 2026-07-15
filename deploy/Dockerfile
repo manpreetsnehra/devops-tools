@@ -34,8 +34,7 @@ RUN curl -fsSL https://get.opentofu.org/install-opentofu.sh -o install-opentofu.
     && sudo ./install-opentofu.sh --install-method standalone --skip-verify \
     && rm -f install-opentofu.sh
 RUN sudo mv kubectl gitlab-tofu /usr/local/bin/
-RUN rm *.gz linux-amd64 README* LICENSE -rf
-RUN chmod +x /usr/local/bin/*
+RUN sudo chmod +x /usr/local/bin/*
 
 RUN curl -sfL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && unzip -qq awscliv2.zip && sudo ./aws/install && rm awscliv2.zip aws -rf
 
