@@ -33,6 +33,7 @@ jobs:
         uses: tj-actions/changed-files@v47
         with:
           dir_names: true
+          matrix: true
 
       - name: Get latest Runner Version and set repos
         id: versions
@@ -53,7 +54,7 @@ jobs:
       packages: write
     strategy:
       matrix:
-        target: ${{ fromJSON(needs.changed-images.outputs.images) }}
+        target: ${{ needs.changed-images.outputs.images }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
