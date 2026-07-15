@@ -99,7 +99,7 @@ jobs:
           cache-to: type=gha,mode=max
 
   build-n-publish:
-    if: contains(github.ref,"master")
+    if: contains(github.ref,'master')
     name: Build and Release Deploy Image
     runs-on: ubuntu-latest
     permissions:
