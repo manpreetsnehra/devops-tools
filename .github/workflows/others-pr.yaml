@@ -80,15 +80,25 @@ jobs:
           cache-to: type=gha,mode=max
           build-args: CODER_USER=${{ secrets.CODER_USER }}
 
+
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@v0.36.0
         with:
-          image-ref: 'ghcr.io/${{ github.repository_owner }}/${{ matrix.target }}:test'
+          image-ref: 'ghcr.io/${{ github.repository_owner }}/deploy:test'
           format: 'sarif'
-          output: 'trivy-results.sarif'
+          hide-progress: true
+          output: trivy.txt
 
-      - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v4
-        with:
-          sarif_file: 'trivy-results.sarif'
-          
+      - name: Publish Trivy Output to Summary
+        run: |
+          if [[ -s trivy.txt ]]; then
+            {
+              echo "### Security Output"
+              echo "<details><summary>Click to expand</summary>"
+              echo ""
+              echo '```terraform'
+              cat trivy.txt
+              echo '```'
+              echo "</details>"
+            } >> $GITHUB_STEP_SUMMARY
+          fi      
