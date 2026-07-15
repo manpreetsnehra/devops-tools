@@ -13,7 +13,6 @@ on:
 
 jobs: 
   changed-images:
-    if: github.even_name == 'pull_request'
     name: Get Changed Files for Testing
     runs-on: ubuntu-latest
     outputs:
