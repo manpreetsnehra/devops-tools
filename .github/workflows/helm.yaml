@@ -2,7 +2,7 @@ name: Comfyui Helm Chart
 on:
   push:
     paths:
-      - 'comfyui/chart/**'
+      - 'charts/**'
 
 defaults:
   run: 
