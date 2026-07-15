@@ -30,7 +30,7 @@ jobs:
     needs: changed-charts
     name: Build and push helm chart
     runs-on: ubuntu-latest
-    default:
+    defaults:
       working-directory: charts
     permissions:
       contents: write
