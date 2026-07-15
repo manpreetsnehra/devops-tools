@@ -41,6 +41,6 @@ RUN curl -sfL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "aws
 USER runner
 WORKDIR /home/runner
 
-RUN /usr/local/bin/helm plugin install https://github.com/databus23/helm-diff --verify=false && helmfile init --force && sudo rm .cache -rf
+RUN helm plugin install https://github.com/databus23/helm-diff --verify=false && helmfile init --force && sudo rm .cache -rf
 
 RUN echo "    StrictHostKeyChecking no" | sudo tee -a /etc/ssh/ssh_config
