@@ -12,7 +12,7 @@ jobs:
   test-image:
     name: Build and Test CI/CD Image
     runs-on: ubuntu-latest
-    if: ! contains(github.ref,'tag')
+    if: github.event_name == 'pull_request'
     permissions:
       contents: write
       pull-requests: read

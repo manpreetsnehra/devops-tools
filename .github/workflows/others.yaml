@@ -44,7 +44,7 @@ jobs:
 
   test-image:
     name: Build and Test Container Images
-    if: github.event == 'pull_request'
+    if: github.event_name == 'pull_request'
     needs: changed-images
     runs-on: ubuntu-latest
     permissions:
