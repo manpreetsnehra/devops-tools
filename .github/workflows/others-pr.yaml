@@ -46,6 +46,8 @@ jobs:
           echo ghcli=$(curl -s "https://api.github.com/repos/cli/cli/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'|cut -b 2-) >> $GITHUB_OUTPUT
           echo whisparr=$(curl --silent https://api.github.com/repos/Whisparr/Whisparr/releases | jq -r 'map(select(.prerelease)) | first | .tag_name' | cut -b 2-) >> $GITHUB_OUTPUT
 
+      - name: debug
+        run: ${{ fromJSON(steps.outputs.versions) }}
   test-image:
     name: Build and Test Container Images
     if: github.event_name == 'pull_request'
