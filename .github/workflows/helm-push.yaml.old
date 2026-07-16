@@ -1,0 +1,56 @@
+name: Publish Helm charts
+on:
+  push:
+    paths:
+      - 'charts/**'
+    branch:
+      - 'master'
+
+jobs:
+  changed-charts:
+    name: Get Changed Files for Testing
+    runs-on: ubuntu-latest
+    outputs:
+      charts: ${{ steps.changed-files.outputs.all_changed_files }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v47
+        with:
+          dir_names: true
+          dir_names_exclude_current_dir: true
+          matrix: true
+          path: 'charts'
+
+  publish-chart:
+    if: contains(github.ref,'master')
+    name: Publish helm chart
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    strategy:
+      matrix: 
+        chart: ${{ needs.changed-charts.outputs.charts }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v6
+      with:
+        fetch-depth: 0
+   
+    - name: Setup Helm
+      uses: azure/setup-helm@v5
+
+    - name: Push Helm Chart to ChartMuseum
+      uses: bsord/helm-push@v4
+      with:
+        username: ${{ secrets.GITLAB_ACCOUNT }}
+        password: ${{ secrets.GITLAB_TOKEN }}
+        registry-url: ${{ secrets.GITLAB_REGISTRY_PATH }}/${{ matrix.chart }}
+        force: true
+        chart-folder: charts/${{ matrix.chart }}
