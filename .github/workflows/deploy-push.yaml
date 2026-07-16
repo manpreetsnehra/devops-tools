@@ -42,7 +42,7 @@ jobs:
         with:          
           tags: |
             type=ref,event=tag
-            type=ref,event=push
+            type=edge,event=master
           labels: org.opencontainers.image.created={{commit_date 'YYYY-MM-DDTHH:mm:ss.SSS[Z]'}}
 
       - name: Set up QEMU
