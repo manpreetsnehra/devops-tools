@@ -6,8 +6,7 @@ on:
       - nginx/**
       - comfyui/**
       - whisparr/**
-  schedule:
-    - cron: "0 2 * * 0"
+      - .github/workflows/others-pr.yaml
 
 jobs: 
   changed-images:
@@ -36,7 +35,7 @@ jobs:
 
   test-image:
     name: Build and Test Container Images
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' && needs.changed-images.outputs.images != '[]'
     needs: changed-images
     runs-on: ubuntu-latest
     concurrency:
@@ -46,6 +45,7 @@ jobs:
       contents: read
       pull-requests: write
       packages: write
+      security-events: read
     strategy:
       matrix:
         target: ${{ fromJSON(needs.changed-images.outputs.images) }}
