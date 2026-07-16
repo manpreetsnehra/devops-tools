@@ -1,9 +1,11 @@
 name: Images for Kubernetes pods
 on:
   pull_request:
-    paths-ignore:
-      - deploy/**
-      - charts/**
+    paths:
+      - codeserver/**
+      - nginx/**
+      - comfyui/**
+      - whisparr/**
   schedule:
     - cron: "0 2 * * 0"
 

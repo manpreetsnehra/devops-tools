@@ -2,10 +2,9 @@ name: Image Publish for CI/CD pipelines
 on:
   push:
     branches:
-      - master
-    paths:
-      - deploy/**
+      - 'master'
     tags:
+      - '*'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-deploy
@@ -13,7 +12,6 @@ concurrency:
 
 jobs:
   build-n-publish:
-    if: contains(github.ref,'tag')
     name: Build and Release CI/CD Image
     runs-on: ubuntu-latest
     permissions:
@@ -43,7 +41,7 @@ jobs:
         uses: docker/metadata-action@v6
         with:          
           tags: |
-            type=ref,event=push tag
+            type=ref,event=tag
             type=ref,event=push
           labels: org.opencontainers.image.created={{commit_date 'YYYY-MM-DDTHH:mm:ss.SSS[Z]'}}
 
@@ -88,6 +86,29 @@ jobs:
         run: aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ secrets.ECR_REPO_PATH }}
 
       - name: Build and Push images to GitHub
+        if: contains(github.ref, 'master')
+        uses: docker/build-push-action@v7
+        with:
+          context: deploy
+          push: true
+          labels: ${{ steps.meta.outputs.labels }}
+          tags: |
+            ghcr.io/${{ github.repostiory_owner }}/deploy:latest
+            ${{ secrets.DOCKERHUB_ACCOUNT }}/deploy:latest
+            ${{ secrets.ECR_REPO_PATH }}/deploy:latest
+            ${{ secrets.GITLAB_REGISTRY_PATH }}/deploy:latest
+          platforms: linux/amd64
+          build-args: |
+            HELMFILE_VERSION=${{ steps.versions.outputs.helmfile }}
+            KUBECTL_VERSION=${{ steps.versions.outputs.kubectl }}
+            HELM_VERSION=${{ steps.versions.outputs.helm }}
+            GITLAB_TOFU_VERSION=${{ steps.versions.outputs.gitlab_tofu }}
+            TFSEC_VERSION=${{ steps.versions.outputs.tfsec }}
+          cache-from: type=gha
+
+
+      - name: Build and Push images to GitHub
+        if: contains(github.ref, 'tag')
         uses: docker/build-push-action@v7
         with:
           context: deploy
@@ -95,17 +116,11 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           tags: |
             ghcr.io/${{ github.repository_owner }}/deploy:${{ steps.meta.outputs.tag }}
-            ghcr.io/${{ github.repostiory_owner }}/deploy:latest
             ${{ secrets.DOCKERHUB_ACCOUNT }}/deploy:${{ steps.meta.outputs.tag }}
-            ${{ secrets.DOCKERHUB_ACCOUNT }}/deploy:latest
             ${{ secrets.ECR_REPO_PATH }}/deploy:${{ steps.meta.outputs.tag }}
-            ${{ secrets.ECR_REPO_PATH }}/deploy:latest
-            ${{ secrets.GITLAB_REGISTRY_PATH }}/deploy:latest
             ${{ secrets.GITLAB_REGISTRY_PATH }}/deploy:${{ steps.meta.outputs.tag }}
           platforms: linux/amd64
           build-args: |
-            RUNNER_VERSION=${{ steps.versions.outputs.runner }}
-            RUNNER_CONTAINER_HOOKS_VERSION=${{ steps.versions.outputs.container_hooks }}
             HELMFILE_VERSION=${{ steps.versions.outputs.helmfile }}
             KUBECTL_VERSION=${{ steps.versions.outputs.kubectl }}
             HELM_VERSION=${{ steps.versions.outputs.helm }}
