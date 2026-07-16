@@ -31,13 +31,11 @@ jobs:
         run: echo ${{ steps.changed-files.outputs.all_changed_files }}
 
   test-chart:
-    needs: changed-charts
     name: Test Chart
     runs-on: ubuntu-latest
     defaults:
       run:
         shell: bash
-        working-directory: charts
     permissions:
       contents: write
       packages: write
@@ -61,7 +59,7 @@ jobs:
     - name: Run chart-testing (list-changed)
       id: list-changed
       run: |
-        ct lint --all
+        ct lint --all --chart
         ct list-changed --target-branch ${{ github.event.repository.default_branch }}
         changed=$(ct list-changed --target-branch ${{ github.event.repository.default_branch }})
         if [[ -n "$changed" ]]; then
