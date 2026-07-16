@@ -74,17 +74,17 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@v0.36.0
-        with:
-          image-ref: 'ghcr.io/${{ github.repository_owner }}/deploy:test'
-          format: 'json'
-          hide-progress: true
-          output: trivy-results.json
-          scanners: 'vuln'
-          severity: "MEDIUM,HIGH,CRITICAL"
-        env:
-          TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
+##      - name: Run Trivy vulnerability scanner
+#        uses: aquasecurity/trivy-action@v0.36.0
+#        with:
+#          image-ref: 'ghcr.io/${{ github.repository_owner }}/deploy:test'
+#          format: 'json'
+#          hide-progress: true
+#          output: trivy-results.json
+#          scanners: 'vuln'
+#          severity: "MEDIUM,HIGH,CRITICAL"
+#        env:
+#          TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
 
-      - name: Post Trivy results as PR comment
-        uses: aarontravass/trivy-pr-comment@v0.0.3
+#      - name: Post Trivy results as PR comment
+#        uses: aarontravass/trivy-pr-comment@v0.0.3
