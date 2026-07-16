@@ -1,4 +1,4 @@
-FROM public.ecr.aws/docker/library/debian:trixie-slim
+FROM public.ecr.aws/docker/library/debian:testing
 
 ARG TARGETPLATFORM
 ARG CHANNEL
@@ -34,7 +34,7 @@ RUN apt-get update && \
     tar xzf whisparr.tar.gz -C /app/bin --strip-components=1 && \
     rm whisparr.tar.gz && \
     rm -rf /app/bin/Whisparr.Update && \
-    printf "UpdateMethod=docker\nBranch=%s\nPackageVersion=%s\nPackageAuthor=[iaacautomation](https://github.com/iaacautomation)\n" "${WHISPARR_VERSION}"> /app/package_info && \
+    printf "UpdateMethod=docker\nBranch=%s\nPackageVersion=%s\nPackageAuthor=[manpreetsnehra](https://github.com/manpreetsnehra)\n" "${WHISPARR_VERSION}"> /app/package_info && \
     chown -R root:root /app && \
     chmod -R 755 /app && \
     rm -rf /tmp/*
