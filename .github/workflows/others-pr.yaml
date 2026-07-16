@@ -39,7 +39,7 @@ jobs:
     needs: changed-images
     runs-on: ubuntu-latest
     concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.target }}
+      group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.image }}
       cancel-in-progress: true    
     permissions:
       contents: read
@@ -48,7 +48,7 @@ jobs:
       security-events: read
     strategy:
       matrix:
-        target: ${{ fromJSON(needs.changed-images.outputs.images) }}
+        image: ${{ fromJSON(needs.changed-images.outputs.images) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -70,13 +70,13 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ github.token }}
 
-      - name: Test Build for ${{ matrix.target }}
+      - name: Test Build for ${{ matrix.image }}
         uses: docker/build-push-action@v7
         with:
-          context: ${{ matrix.target }}
+          context: ${{ matrix.image }}
           push: true
           sbom: true
-          tags: ghcr.io/${{ github.repository_owner }}/${{ matrix.target }}:test
+          tags: ghcr.io/${{ github.repository_owner }}/${{ matrix.image }}:test
           platforms: linux/amd64
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -85,7 +85,7 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@v0.36.0
         with:
-          image-ref: 'ghcr.io/${{ github.repository_owner }}/${{ matrix.target }}:test'
+          image-ref: 'ghcr.io/${{ github.repository_owner }}/${{ matrix.image }}:test'
           format: 'sarif'
           output: 'trivy-results.sarif'
           hide-progress: true
@@ -98,3 +98,4 @@ jobs:
         uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: 'trivy-results.sarif'
+          category: ${{ matrix.image }}

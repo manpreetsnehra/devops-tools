@@ -2,14 +2,8 @@ name: Image for CI/CD pipelines
 on:
   pull_request:
     paths:
-      - deploy/**
-  push:
-    branches:
-      - master
-    paths:
       - 'deploy/**'
       - '.github/workflows/deploy-pr.yaml'
-    tags:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-deploy
@@ -19,7 +13,7 @@ jobs:
   test-image:
     name: Build and Test CI/CD Image
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' || github.event_name == 'push'
+    if: github.event_name == 'pull_request'
     permissions:
       contents: write
       pull-requests: write
@@ -66,8 +60,6 @@ jobs:
           platforms: linux/amd64
           sbom: true
           build-args: |
-            RUNNER_VERSION=${{ steps.versions.outputs.runner }}
-            RUNNER_CONTAINER_HOOKS_VERSION=${{ steps.versions.outputs.container_hooks }}
             HELMFILE_VERSION=${{ steps.versions.outputs.helmfile }}
             KUBECTL_VERSION=${{ steps.versions.outputs.kubectl }}
             HELM_VERSION=${{ steps.versions.outputs.helm }}
@@ -92,3 +84,4 @@ jobs:
         uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: 'trivy-results.sarif'
+          category: deploy
