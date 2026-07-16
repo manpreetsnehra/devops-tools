@@ -54,7 +54,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 RUN wget --quiet -O /usr/local/bin/kubectl "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && \
-    wget --quiet -O /usr/local/bin/tfsec https://github.com/aquasecurity/tfsec/releases/download/$(curl -sL "https://api.github.com/repos/aquasecurity/tfsec/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')/tfsec-linux-amd64 && \    
+    wget --quiet -O /usr/local/bin/tfsec https://github.com/aquasecurity/tfsec/releases/download/$(curl -sL "https://api.github.com/repos/aquasecurity/tfsec/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')/tfsec-linux-amd64 && \
     chmod +x /usr/local/bin/* 
 
 RUN export CODESERVER_VERSION=$(curl -s "https://api.github.com/repos/coder/code-server/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'|cut -b 2-) && \
@@ -69,6 +69,9 @@ RUN curl -fsSL https://get.opentofu.org/install-opentofu.sh -o install-opentofu.
     bash get_helm.sh && bash install-opentofu.sh --install-method standalone && \
     rm -f install-opentofu.sh get_helm.sh
 
+RUN export HELM_CHART_TESTING=$(curl -sL "https://api.github.com/repos/helm/chart-testing/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/') && \
+    curl -fsSL https://github.com/helm/chart-testing/releases/download/v${HELM_CHART_TESTING}/chart-testing_${HELM_CHART_TESTING}_linux_amd64.tar.gz | tar xfz - -C /tmp && \
+    mv /tmp/ct /usr/local/bin/ && mv /tmp/etc/* /etc/ 
 
 EXPOSE 8080
 # This way, if someone sets $DOCKER_USER, docker-exec will still work as
