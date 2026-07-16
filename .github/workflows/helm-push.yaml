@@ -27,8 +27,6 @@ jobs:
           matrix: true
           path: 'charts'
 
-      - name: Debug
-        run: echo ${{ steps.changed-files.outputs.all_changed_files }}
   publish-chart:
     if: contains(github.ref,'master')
     name: Publish helm chart

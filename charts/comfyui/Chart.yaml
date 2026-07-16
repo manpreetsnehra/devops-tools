@@ -24,6 +24,5 @@ version: 0.1.0
 appVersion: "0.27.0"
 
 maintainers:
-  - name: Manpreet Singh Nehra
-    email: manpreet@nehraconsultancy.eu
+  - name: manpreetsnehra
     url: https://github.com/manpreetsnehra
