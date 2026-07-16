@@ -79,42 +79,20 @@ jobs:
         id: 
         with:
           image-ref: 'ghcr.io/${{ github.repository_owner }}/deploy:test'
-          format: 'sarif'
+          format: 'table'
           hide-progress: true
           output: trivy.txt
+          scanners: 'vuln'
+          severity: "MEDIUM,HIGH,CRITICAL"
+        env:
+          TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
 
-      - name: Update PR
-        uses: actions/github-script@v9
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            // 1. Retrieve existing bot comments for the PR
-            const { data: comments } = await github.rest.issues.listComments({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-            });
-            const botComment = comments.find(comment => {
-              return comment.user.type === 'Bot' && comment.body.includes('Security scan Results for ${{ matrix.chart }}')
-            });
-            const security_txt = fs.readFileSync('trivy.txt', 'utf8');
-            const output = `#### Security scan Results for ${{ matrix.chart }}
-                \`\`\`
-                console.log(security_txt)
-                \`\`\`
-                [Security Scan Results](${{ steps.plan-run.outputs.run_link }})
-                `;
-            // 3. Delete previous comment so PR timeline makes sense
-            if (botComment) {
-              github.rest.issues.deleteComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                comment_id: botComment.id,
-              });
-            }
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: output
-            });
+      - name: Publish Trivy Output to Summary
+        run: |
+          if [[ -s trivy.txt ]]; then
+            {
+              echo '```'
+              cat trivy.txt
+              echo '```'
+            } >> $GITHUB_STEP_SUMMARY
+          fi

@@ -85,20 +85,20 @@ jobs:
         uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: 'ghcr.io/${{ github.repository_owner }}/deploy:test'
-          format: 'sarif'
+          format: 'table'
           hide-progress: true
           output: trivy.txt
+          scanners: 'vuln'
+          severity: "MEDIUM,HIGH,CRITICAL"
+        env:
+          TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
 
       - name: Publish Trivy Output to Summary
         run: |
           if [[ -s trivy.txt ]]; then
             {
-              echo "### Security Output"
-              echo "<details><summary>Click to expand</summary>"
-              echo ""
-              echo '```terraform'
+              echo '```'
               cat trivy.txt
               echo '```'
-              echo "</details>"
             } >> $GITHUB_STEP_SUMMARY
-          fi      
+          fi
