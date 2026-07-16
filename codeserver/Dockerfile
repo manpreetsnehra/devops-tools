@@ -70,11 +70,11 @@ RUN wget --quiet -O /usr/local/bin/kubectl "https://dl.k8s.io/release/$(curl -L 
 RUN export CODESERVER_VERSION=$(curl -s "https://api.github.com/repos/coder/code-server/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'|cut -b 2-) && \
     wget -q https://github.com/coder/code-server/releases/download/v${CODESERVER_VERSION}/code-server_${CODESERVER_VERSION}_amd64.deb && \
     export GHCLI_VERSION=$(curl -s "https://api.github.com/repos/cli/cli/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'|cut -b 2-) && \
-    wget https://github.com/cli/cli/releases/download/v${GHCLI_VERSION}/gh_${GHCLI_VERSION}_linux_amd64.deb && \
+    wget -q https://github.com/cli/cli/releases/download/v${GHCLI_VERSION}/gh_${GHCLI_VERSION}_linux_amd64.deb && \
     export TOFU_VERSION=$(curl -s "https://api.github.com/repos/opentofu/opentofu/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'|cut -b 2-) && \
-    wget https://github.com/opentofu/opeentofu/releases/download/v${TOFU_VERSION}/tofu_${TOFU_VERSION}_linux_amd64.deb && \
-    dpkg -i code-server_${CODESERVER_VERSION}_amd64.deb gh_${GHCLI_VERSION}_linux_amd64.deb tofu_${TOFU_VERSION}_linux_amd64.deb && \
-    rm gh_${GHCLI_VERSION}_linux_amd64.deb code-server_${CODESERVER_VERSION}_amd64.deb tofu_${TOFU_VERSION}_linux_amd64.deb
+    wget -q https://github.com/opentofu/opentofu/releases/download/v${TOFU_VERSION}/tofu_${TOFU_VERSION}_amd64.deb && \
+    dpkg -i code-server_${CODESERVER_VERSION}_amd64.deb gh_${GHCLI_VERSION}_linux_amd64.deb tofu_${TOFU_VERSION}_amd64.deb && \
+    rm gh_${GHCLI_VERSION}_linux_amd64.deb code-server_${CODESERVER_VERSION}_amd64.deb tofu_${TOFU_VERSION}_amd64.deb
 
 EXPOSE 8080
 # This way, if someone sets $DOCKER_USER, docker-exec will still work as

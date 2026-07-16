@@ -42,7 +42,7 @@ jobs:
       cancel-in-progress: true    
     permissions:
       contents: read
-      pull-requests: read
+      pull-requests: write
       packages: write
     strategy:
       matrix:
@@ -85,20 +85,13 @@ jobs:
         uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: 'ghcr.io/${{ github.repository_owner }}/deploy:test'
-          format: 'table'
+          format: 'json'
           hide-progress: true
-          output: trivy.txt
+          output: trivy-results.json
           scanners: 'vuln'
           severity: "MEDIUM,HIGH,CRITICAL"
         env:
           TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
 
-      - name: Publish Trivy Output to Summary
-        run: |
-          if [[ -s trivy.txt ]]; then
-            {
-              echo '```'
-              cat trivy.txt
-              echo '```'
-            } >> $GITHUB_STEP_SUMMARY
-          fi
+      - name: Post Trivy results as PR comment
+        uses: aarontravass/trivy-pr-comment@v0.0.3
