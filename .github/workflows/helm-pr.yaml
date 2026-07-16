@@ -61,6 +61,7 @@ jobs:
     - name: Run chart-testing (list-changed)
       id: list-changed
       run: |
+        ct list --all
         ct list-changed --target-branch ${{ github.event.repository.default_branch }}
         changed=$(ct list-changed --target-branch ${{ github.event.repository.default_branch }})
         if [[ -n "$changed" ]]; then
