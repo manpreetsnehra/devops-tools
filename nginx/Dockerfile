@@ -1,4 +1,4 @@
-FROM public.ecr.aws/docker/library/debian:latest
+FROM public.ecr.aws/docker/library/debian:testing
 
 RUN apt-get -q update -y \
     && apt-get -q install -y nginx libnginx-mod-http-fancyindex git \

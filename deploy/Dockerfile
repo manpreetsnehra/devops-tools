@@ -4,40 +4,48 @@ LABEL org.opencontainers.image.authors="Manpreet Singh Nehra"
 LABEL org.opencontainers.image.title="CI/CD Tools base"
 LABEL org.opencontainers.image.description="CI Tools Image for CI PIpelines"
 
-ARG TARGETARCH
-ARG HELMFILE_VERSION
-ARG KUBECTL_VERSION
-ARG HELM_VERSION
-ARG GITLAB_TOFU_VERSION
-
 RUN sudo apt-get -q update -y \
-    && sudo apt-get -q install -y --no-install-recommends sudo lsb-release gpg-agent software-properties-common curl jq unzip git openssh-client ansible-lint ansible nodejs bash python3-yaml python3-kubernetes python3-botocore python3-boto3 idn2 \
+    && sudo apt-get -q install -y --no-install-recommends \
+    git \
+    openssh-client \
+    ansible-lint \
+    ansible \
+    nodejs \
+    python3-yaml \
+    python3-kubernetes \
+    python3-botocore \
+    python3-boto3 \
+    idn2 \
+    && sudo apt-get clean \
     && sudo rm -rf /var/lib/apt/lists/*
 
-WORKDIR /home/runner/tools
+ARG TARGETARCH
+ARG HELMFILE_VERSION
+ARG HELM_VERSION
+ARG GITLAB_TOFU_VERSION
+ARG KUBECTL_VERSION
 
 ## Download Tools
-RUN curl -sLo kubectl "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/${TARGETARCH}/kubectl"
-RUN curl -sfLo helm.tar.gz https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz
-RUN tar xfz helm.tar.gz && cp linux-amd64/helm .
+RUN curl -fsSL -o kubectl https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/${TARGETARCH:-amd64}/kubectl
+RUN curl -fsSL -o /tmp/get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-4 && chmod 700 /tmp/get_helm.sh && sudo /tmp/get_helm.sh
 RUN curl -sfLo gitlab-tofu https://gitlab.com/components/opentofu/-/raw/${GITLAB_TOFU_VERSION}/src/gitlab-tofu.sh
-RUN curl -sfLo helmfile.tar.gz https://github.com/helmfile/helmfile/releases/download/v${HELMFILE_VERSION}/helmfile_${HELMFILE_VERSION}_linux_${TARGETARCH}.tar.gz
-RUN curl --proto '=https' --tlsv1.2 -fsSL https://get.opentofu.org/install-opentofu.sh -o install-opentofu.sh \
+RUN curl -fsSL https://get.opentofu.org/install-opentofu.sh -o install-opentofu.sh \
     && chmod +x install-opentofu.sh \
     && sudo ./install-opentofu.sh --install-method standalone --skip-verify \
     && rm -f install-opentofu.sh
-RUN tar xfz helmfile.tar.gz
-RUN rm *.gz linux-amd64 README* LICENSE -rf
-RUN chmod +x *
+RUN sudo mv kubectl gitlab-tofu /usr/local/bin/
+RUN curl -sfL -o /tmp/helmfile.tar.gz https://github.com/helmfile/helmfile/releases/download/v${HELMFILE_VERSION}/helmfile_${HELMFILE_VERSION}_linux_amd64.tar.gz && \
+    tar xfz /tmp/helmfile.tar.gz -C /tmp/ && \
+    sudo mv /tmp/helmfile /usr/local/bin/ 
+RUN sudo chmod +x /usr/local/bin/*
 
 RUN curl -sfL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && unzip -qq awscliv2.zip && sudo ./aws/install && rm awscliv2.zip aws -rf
-
-RUN ls -l && sudo cp * /usr/local/bin/
 
 USER runner
 WORKDIR /home/runner
 
-RUN /usr/local/bin/helm plugin install https://github.com/databus23/helm-diff --verify=false && helmfile init --force && sudo rm .cache -rf
+RUN helm plugin install https://github.com/databus23/helm-diff --verify=false && \
+    helmfile init --force && \
+    sudo rm .cache -rf
 
 RUN echo "    StrictHostKeyChecking no" | sudo tee -a /etc/ssh/ssh_config
-

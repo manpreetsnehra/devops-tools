@@ -1,12 +1,13 @@
-FROM public.ecr.aws/docker/library/debian:trixie-slim
+FROM public.ecr.aws/docker/library/debian:testing
 
 ARG TARGETPLATFORM
 ARG CHANNEL
+ARG WHISPARR_VERSION
 
 ENV COMPlus_EnableDiagnostics="0" \
     UMASK="0002" \
     TZ="Etc/UTC" \
-    DEBIAN_FRONTEND=noninteractive 
+    DEBIAN_FRONTEND=noninteractive
 
 USER root
 WORKDIR /app
@@ -33,10 +34,13 @@ RUN apt-get update && \
     tar xzf whisparr.tar.gz -C /app/bin --strip-components=1 && \
     rm whisparr.tar.gz && \
     rm -rf /app/bin/Whisparr.Update && \
-    printf "UpdateMethod=docker\nBranch=%s\nPackageVersion=%s\nPackageAuthor=[iaacautomation](https://github.com/iaacautomation)\n" "${WHISPARR_VERSION}"> /app/package_info && \
+    printf "UpdateMethod=docker\nBranch=%s\nPackageVersion=%s\nPackageAuthor=[manpreetsnehra](https://github.com/manpreetsnehra)\n" "${WHISPARR_VERSION}"> /app/package_info && \
     chown -R root:root /app && \
     chmod -R 755 /app && \
     rm -rf /tmp/*
+
+LABEL org.opencontainers.image.source="https://github.com/Whisparr/Whisparr"
+LABEL org.opencontainers.image.version=${WHISPARR_VERSION}
 
 COPY entrypoint.sh /entrypoint.sh
 
@@ -47,4 +51,3 @@ VOLUME ["/config"]
 ENTRYPOINT ["/usr/bin/catatonit", "--"]
 CMD ["/entrypoint.sh"]
 
-LABEL org.opencontainers.image.source="https://github.com/Whisparr/Whisparr"
