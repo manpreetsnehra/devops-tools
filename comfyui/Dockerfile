@@ -1,4 +1,4 @@
-FROM public.ecr.aws/debian/debian:13-slim
+FROM public.ecr.aws/debian/debian:testing
 
 ARG GPU_API_VERSION
 
