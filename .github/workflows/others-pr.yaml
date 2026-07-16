@@ -6,8 +6,7 @@ on:
       - nginx/**
       - comfyui/**
       - whisparr/**
-  schedule:
-    - cron: "0 2 * * 0"
+      - .github/workflows/others-pr.yaml
 
 jobs: 
   changed-images:
@@ -46,6 +45,7 @@ jobs:
       contents: read
       pull-requests: write
       packages: write
+      security-events: read
     strategy:
       matrix:
         target: ${{ fromJSON(needs.changed-images.outputs.images) }}

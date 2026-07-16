@@ -3,6 +3,9 @@ on:
   push:
     branches:
       - 'master'
+    paths:
+      - 'deploy/**'
+      - '.github/workflows/deploy-push.yaml'
     tags:
       - '*'
 
@@ -93,7 +96,7 @@ jobs:
           push: true
           labels: ${{ steps.meta.outputs.labels }}
           tags: |
-            ghcr.io/${{ github.repostiory_owner }}/deploy:latest
+            ghcr.io/${{ github.repository_owner }}/deploy:latest
             ${{ secrets.DOCKERHUB_ACCOUNT }}/deploy:latest
             ${{ secrets.ECR_REPO_PATH }}/deploy:latest
             ${{ secrets.GITLAB_REGISTRY_PATH }}/deploy:latest
@@ -105,7 +108,6 @@ jobs:
             GITLAB_TOFU_VERSION=${{ steps.versions.outputs.gitlab_tofu }}
             TFSEC_VERSION=${{ steps.versions.outputs.tfsec }}
           cache-from: type=gha
-
 
       - name: Build and Push images to GitHub
         if: contains(github.ref, 'tag')

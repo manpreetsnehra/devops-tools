@@ -7,7 +7,8 @@ on:
     branches:
       - master
     paths:
-      - deploy/**
+      - 'deploy/**'
+      - '.github/workflows/deploy-pr.yaml'
     tags:
 
 concurrency:
@@ -23,6 +24,7 @@ jobs:
       contents: write
       pull-requests: write
       packages: write
+      security-events: read
     steps:
       - name: Checkout
         uses: actions/checkout@v6
