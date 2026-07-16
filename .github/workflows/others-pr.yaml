@@ -92,11 +92,9 @@ jobs:
         env:
           TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
 
-      - name: Read README.md
+      - name: Read Results
         id: package
-        uses: jaywcjlove/github-action-read-file@v2.1.0
-        with:
-          path: trivy-results.json
+        run: echo results=$(cat trivy-results.json) >> $GITHUB_OUTPUT
 
       - name: Update PR
         uses: actions/github-script@v9
@@ -114,7 +112,7 @@ jobs:
             });
             const output = `#### Trivy Security Output
                 \`\`\`
-                ${{ steps.package.outputs.content }}
+                ${{ steps.package.outputs.results }}
                 \`\`\`
                 `;
             // 3. Delete previous comment so PR timeline makes sense
