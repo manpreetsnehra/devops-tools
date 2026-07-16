@@ -94,7 +94,7 @@ jobs:
 
       - name: Read README.md
         id: package
-        uses: jaywcjlove/github-action-read-file@v2
+        uses: jaywcjlove/github-action-read-file@v2.1.0
         with:
           path: trivy-results.json
 
