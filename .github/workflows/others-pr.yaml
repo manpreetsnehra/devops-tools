@@ -78,7 +78,6 @@ jobs:
           platforms: linux/amd64
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          build-args: CODER_USER=${{ secrets.CODER_USER }}
 
 
       - name: Run Trivy vulnerability scanner
