@@ -84,7 +84,7 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@v0.36.0
         with:
-          image-ref: 'ghcr.io/${{ github.repository_owner }}/deploy:test'
+          image-ref: 'ghcr.io/${{ github.repository_owner }}/${{ matrix.target }}:test'
           format: 'json'
           hide-progress: true
           output: trivy-results.json
