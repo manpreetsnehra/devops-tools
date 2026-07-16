@@ -1,8 +1,6 @@
 name: Image Publish for CI/CD pipelines
 on:
   push:
-    paths:
-      - deploy/**
     tags:
 
 concurrency:
@@ -11,7 +9,6 @@ concurrency:
 
 jobs:
   build-n-publish:
-    if: contains(github.ref,'tag')
     name: Build and Release CI/CD Image
     runs-on: ubuntu-latest
     permissions:
@@ -102,8 +99,6 @@ jobs:
             ${{ secrets.GITLAB_REGISTRY_PATH }}/deploy:${{ steps.meta.outputs.tag }}
           platforms: linux/amd64
           build-args: |
-            RUNNER_VERSION=${{ steps.versions.outputs.runner }}
-            RUNNER_CONTAINER_HOOKS_VERSION=${{ steps.versions.outputs.container_hooks }}
             HELMFILE_VERSION=${{ steps.versions.outputs.helmfile }}
             KUBECTL_VERSION=${{ steps.versions.outputs.kubectl }}
             HELM_VERSION=${{ steps.versions.outputs.helm }}
