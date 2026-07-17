@@ -21,7 +21,7 @@ jobs:
       contents: read
       pull-requests: read
       packages: write
-      security-events: read
+      security-events: write
     strategy:
       matrix:
         image:
