@@ -47,7 +47,7 @@ jobs:
           if [[ $#changed_files > 0 ]]
           then
             echo changes=$${{ steps.changed-files.outputs.all_changed_files }} >> $GITHUB_OUTPUT
-          else:
+          else
             echo changes='["codeserver","comfyui","nginx","whisparr"]' >> $GITHUB_OUTPUT
           fi
 

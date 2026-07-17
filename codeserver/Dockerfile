@@ -81,7 +81,6 @@ EXPOSE 8080
 # the uid will remain the same. note: only relevant if -u isn't passed to
 # docker-run.
 USER 1000
-ENV USER=coder
 WORKDIR /home/coder
 
 ENTRYPOINT ["dumb-init", "/usr/bin/code-server", "$@", "--bind-addr", "0.0.0.0:8080", "."]
