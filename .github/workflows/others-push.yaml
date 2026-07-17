@@ -43,8 +43,7 @@ jobs:
       - name: Schedule changes
         id: changes
         run: |
-          changed_files=${{ fromJSON(steps.changed-files.outputs.all_changed_files) }}
-          if [[ $#changed_files > 0 ]]
+          if [[ ${{ steps.changed-files.outputs.all_changed_files }} != '[]' ]]
           then
             echo changes=${{ steps.changed-files.outputs.all_changed_files }} >> $GITHUB_OUTPUT
           else
