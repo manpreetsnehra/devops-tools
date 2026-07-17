@@ -39,7 +39,7 @@ ENV LANG=en_US.UTF-8
 RUN if grep -q 1000 /etc/passwd; then \
     userdel -r "$(id -un 1000)"; \
     fi && \
-    useradd -u 1000 coder && \
+    useradd -u 1000 -s /bin/bash coder && \
     echo "coder ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 RUN curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg > /dev/null && \
