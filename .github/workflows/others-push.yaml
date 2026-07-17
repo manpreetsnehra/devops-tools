@@ -46,10 +46,13 @@ jobs:
           changed_files=${{ fromJSON(steps.changed-files.outputs.all_changed_files) }}
           if [[ $#changed_files > 0 ]]
           then
-            echo changes=$${{ steps.changed-files.outputs.all_changed_files }} >> $GITHUB_OUTPUT
+            echo changes=${{ steps.changed-files.outputs.all_changed_files }} >> $GITHUB_OUTPUT
           else
             echo changes='["codeserver","comfyui","nginx","whisparr"]' >> $GITHUB_OUTPUT
-          fi
+          fi      
+
+      - name: Debug
+        run: echo ${{ steps.changes.outputs.changes }}
 
   build-n-publish:
     if: contains(github.ref,'master')
