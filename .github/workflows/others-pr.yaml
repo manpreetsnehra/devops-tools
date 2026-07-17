@@ -8,9 +8,12 @@ on:
       - whisparr/**
       - .github/workflows/others-pr.yaml
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-others
+  cancel-in-progress: true
+
 jobs: 
   changed-images:
-    if: github.event_name == 'pull_request'
     name: Get Changed Files for Testing
     runs-on: ubuntu-latest
     outputs:

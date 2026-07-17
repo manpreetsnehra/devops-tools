@@ -6,6 +6,10 @@ on:
     branch:
       - 'master'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-helm
+  cancel-in-progress: true
+
 jobs:
   changed-charts:
     name: Get Changed Files for Testing
