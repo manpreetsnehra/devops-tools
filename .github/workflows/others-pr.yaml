@@ -43,9 +43,9 @@ jobs:
       cancel-in-progress: true    
     permissions:
       contents: read
-      pull-requests: write
+      pull-requests: read
       packages: write
-      security-events: read
+      security-events: write
     strategy:
       matrix:
         image: ${{ fromJSON(needs.changed-images.outputs.images) }}
