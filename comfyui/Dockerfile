@@ -1,6 +1,12 @@
 FROM public.ecr.aws/debian/debian:testing
 
-ARG GPU_API_VERSION
+LABEL org.opencontainers.image.authors="Manpreet Singh Nehra"
+LABEL org.opencontainers.image.source="https://github.com/manpreetsnehra/devops-tools/"
+LABEL org.opencontainers.image.title="ComyUI"
+LABEL org.opencontainers.image.description="Comfyui with distributed custom Node"
+LABEL org.opencontainers.image.licenses="MIT"
+
+ARG GPU_API_VERSION=cuda
 
 RUN apt-get update -y && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y curl python3-virtualenv && \

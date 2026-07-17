@@ -1,7 +1,7 @@
 FROM public.ecr.aws/docker/library/debian:testing
 
 LABEL org.opencontainers.image.authors="Manpreet Singh Nehra"
-LABEL org.opencontainers.image.source="https://github.com/manpreetsnehra/devops-tools/tree/main/codeserver"
+LABEL org.opencontainers.image.source="https://github.com/manpreetsnehra/devops-tools/"
 LABEL org.opencontainers.image.title="Code Server"
 LABEL org.opencontainers.image.description="Code Server with various apps inbuilt"
 LABEL org.opencontainers.image.licenses="MIT"
