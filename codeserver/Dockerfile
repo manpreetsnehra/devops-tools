@@ -39,8 +39,8 @@ ENV LANG=en_US.UTF-8
 RUN if grep -q 1000 /etc/passwd; then \
     userdel -r "$(id -un 1000)"; \
     fi && \
-    useradd -u 1000 ${CODER_USER} && \
-    echo "${CODER_USER} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+    useradd -u 1000 coder && \
+    echo "coder ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 RUN curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg > /dev/null && \
     echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
@@ -81,8 +81,8 @@ EXPOSE 8080
 # the uid will remain the same. note: only relevant if -u isn't passed to
 # docker-run.
 USER 1000
-ENV USER=${CODER_USER}
-WORKDIR /home/${CODER_USER}
+ENV USER=coder
+WORKDIR /home/coder
 
 ENTRYPOINT ["dumb-init", "/usr/bin/code-server", "$@", "--bind-addr", "0.0.0.0:8080", "."]
 
