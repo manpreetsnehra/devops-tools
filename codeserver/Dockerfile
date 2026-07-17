@@ -6,7 +6,7 @@ LABEL org.opencontainers.image.title="Code Server"
 LABEL org.opencontainers.image.description="Code Server with various apps inbuilt"
 LABEL org.opencontainers.image.licenses="MIT"
 
-ARG CODER_USER=coder
+ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y \
@@ -28,7 +28,7 @@ RUN apt-get update \
     virtualenv \
     awscli \
     azure-cli && \
-    DEBIAN_FRONTEND=noninteractive apt-get -y purge nano \
+    apt-get -y purge nano \
     && rm -rf /var/lib/apt/lists/*
 
 # https://wiki.debian.org/Locale#Manually
@@ -52,7 +52,7 @@ RUN curl -fsSL https://packages.buildkite.com/helm-linux/helm-debian/gpgkey| gpg
     echo "deb [signed-by=/usr/share/keyrings/helm.gpg] https://packages.buildkite.com/helm-linux/helm-debian/any/ any main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
 
 RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install google-cloud-cli docker-ce-cli docker-buildx-plugin docker-compose-plugin helm --no-install-recommends && \
+    apt-get install google-cloud-cli docker-ce-cli docker-buildx-plugin docker-compose-plugin helm --no-install-recommends && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
