@@ -1,5 +1,11 @@
 FROM public.ecr.aws/docker/library/debian:testing
 
+LABEL org.opencontainers.image.authors="Manpreet Singh Nehra"
+LABEL org.opencontainers.image.source = "https://github.com/manpreetsnehra/devops-tools"
+LABEL org.opencontainers.image.title="Whisparr for Kubernetes"
+LABEL org.opencontainers.image.description="Whisparr docker imagae for deployment on docker/kubernetes"
+LABEL org.opencontainers.image.licenses="MIT"
+
 ARG TARGETPLATFORM
 ARG CHANNEL
 ARG WHISPARR_VERSION

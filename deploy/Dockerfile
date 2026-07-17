@@ -1,8 +1,10 @@
 FROM ghcr.io/actions/actions-runner:latest
 
 LABEL org.opencontainers.image.authors="Manpreet Singh Nehra"
+LABEL org.opencontainers.image.source = "https://github.com/manpreetsnehra/devops-tools"
 LABEL org.opencontainers.image.title="CI/CD Tools base"
 LABEL org.opencontainers.image.description="CI Tools Image for CI PIpelines"
+LABEL org.opencontainers.image.licenses="MIT"
 
 RUN sudo apt-get -q update -y \
     && sudo apt-get -q install -y --no-install-recommends \
