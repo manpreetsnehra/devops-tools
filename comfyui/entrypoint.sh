@@ -11,24 +11,12 @@ if [[ -z "${USER_DIR}" ]];then USER_DIR=${BASE_DIR}/user;fi
 sudo chown -f comfy:comfy $INSTALL_DIR $TEMP_DIR $OUTPUT_DIR $INPUT_DIR $USER_DIR $BASE_DIR
 mkdir -p $INSTALL_DIR $TEMP_DIR $OUTPUT_DIR $INPUT_DIR $USER_DIR
 # Get latest versions
-export COMFYUI_VERSION=`curl -fsSL "https://api.github.com/repos/Comfy-Org/ComfyUI/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'|cut -b 2-` && \
-export COMFYUI_DISTRIBUTED_VERSION=`curl -fsSL "https://api.github.com/repos/robertvoy/ComfyUI-Distributed/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'|cut -b 2-`
 
-## Get ComfyUI
-if [[ $COMFYUI_VERSION != $(cat ${INSTALL_DIR}/COMFYUI_INSTALLED_VERSION) ]]
-then
-  mkdir -p ${INSTALL_DIR}/ui
-  curl -s -L https://github.com/Comfy-Org/ComfyUI/archive/refs/tags/v${COMFYUI_VERSION}.tar.gz | tar xfz - -C ${INSTALL_DIR}/ui --strip-components=1
-  echo $COMFUI_VERSION > ${INSTALL_DIR}/COMFYUI_INSTALLED_VERSION
-fi
+mkdir -p ${INSTALL_DIR}/ui
+tar xfvz /home/comfy/comfyui.tar.gz -C ${INSTALL_DIR}/ui --strip-components=1
 
-## Get ComfyUI Distributed
-if [[ ! -d ${BASE_DIR}/custom_nodes/ComfyUI-Distributed ]] || [[ $COMFYUI_DISTRIBUTED_VERSION != $(cat ${INSTALL_DIR}/COMFYUI_DISTRIBUTED_INSTALLED_VERSION) ]]
-then
-  mkdir -p ${BASE_DIR}/custom_nodes/ComfyUI-Distributed
-  curl -s -L https://github.com/robertvoy/ComfyUI-Distributed/archive/refs/tags/v${COMFYUI_DISTRIBUTED_VERSION}.tar.gz | tar xfz - -C ${BASE_DIR}/custom_nodes/ComfyUI-Distributed --strip-components=1
-  echo $COMFUI_DISTRIBUTED_VERSION > ${INSTALL_DIR}/COMFYUI_DISTRIBUTED_INSTALLED_VERSION  
-fi
+mkdir -p ${BASE_DIR}/custom_nodes/ComfyUI-Distributed
+tar xfvz /home/comfy/comfyui-distribted.tar.gz -C ${BASE_DIR}/custom_nodes/ComfyUI-Distributed --strip-components=1
 
 ## Setup Virtual Env
 virtualenv ${INSTALL_DIR}/venv

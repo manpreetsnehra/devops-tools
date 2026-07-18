@@ -109,15 +109,17 @@ livenessProbe:
   httpGet:
     path: /
     port: http
-  initialDelaySeconds: 180
-  periodSeconds: 10
 readinessProbe:
   httpGet:
     path: /
     port: http
-  initialDelaySeconds: 120
-  periodSeconds: 10
-
+startupProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 500
+  failureThreshold: 30
+  periodSeconds: 30
 storage:
   install:
     enabled: true
