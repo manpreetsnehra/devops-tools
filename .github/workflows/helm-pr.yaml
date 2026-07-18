@@ -43,10 +43,10 @@ jobs:
       contents: read
       packages: write
       security-events: write
-    strategy:
-      matrix:
-        version:
-          - v1.35.0
+#    strategy:
+#      matrix:
+#        version:
+#          - v1.35.0
 #          - v1.34.3
 ##          - v1.33.7
  ##         - v1.32.11
@@ -85,8 +85,8 @@ jobs:
     - name: Create kind cluster
       if: steps.list-changed.outputs.changed == 'true'
       uses: helm/kind-action@v1
-      with:
-        version: ${{ matrix.version }}
+#      with:
+#        version: ${{ matrix.version }}
 
     - name: Run chart-testing (install)
       if: steps.list-changed.outputs.changed == 'true'
