@@ -3,7 +3,7 @@ on:
   push:
     paths:
       - 'charts/**'
-    branch:
+    branches:
       - 'master'
 
 concurrency:
