@@ -10,9 +10,7 @@ if [[ -z "${USER_DIR}" ]];then USER_DIR=${BASE_DIR}/user;fi
 
 sudo chown -f comfy:comfy $INSTALL_DIR $TEMP_DIR $OUTPUT_DIR $INPUT_DIR $USER_DIR $BASE_DIR
 mkdir -p $INSTALL_DIR $TEMP_DIR $OUTPUT_DIR $INPUT_DIR $USER_DIR
-# Get latest versions
 
-mkdir -p ${INSTALL_DIR}/ui
 tar xfz /home/comfy/comfyui.tar.gz -C ${INSTALL_DIR}/ui --strip-components=1
 
 mkdir -p ${BASE_DIR}/custom_nodes/ComfyUI-Distributed
