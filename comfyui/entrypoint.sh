@@ -16,7 +16,7 @@ mkdir -p ${INSTALL_DIR}/ui
 tar xfz /home/comfy/comfyui.tar.gz -C ${INSTALL_DIR}/ui --strip-components=1
 
 mkdir -p ${BASE_DIR}/custom_nodes/ComfyUI-Distributed
-tar xfz /home/comfy/comfyui-distribted.tar.gz -C ${BASE_DIR}/custom_nodes/ComfyUI-Distributed --strip-components=1
+tar xfz /home/comfy/comfyui-distributed.tar.gz -C ${BASE_DIR}/custom_nodes/ComfyUI-Distributed --strip-components=1
 
 ## Setup Virtual Env
 virtualenv ${INSTALL_DIR}/venv
