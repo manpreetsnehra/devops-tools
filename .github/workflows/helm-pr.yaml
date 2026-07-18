@@ -43,6 +43,13 @@ jobs:
       contents: read
       packages: write
       security-events: write
+    strategy:
+      matrix:
+        version:
+          - v0.32.0
+          - v0.31.0
+          - v0.30.0
+          - v0.29.0
     steps:
     - name: Checkout
       uses: actions/checkout@v6
