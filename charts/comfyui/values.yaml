@@ -138,7 +138,7 @@ storage:
     enabled: false
   user:
     enabled: false
-  output:    
+  output:
     enabled: false
 nodeSelector: {}
 
