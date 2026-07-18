@@ -59,42 +59,35 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           env:
-            - name: INSTALL_DIR
-              value: /home/comfy/install
-          {{- if .Values.storage.base.enabled }}
             - name: BASE_DIR
-              value: /home/comfy/base
-          {{- else }}
-            - name: BASE_DIR
-              value: ${INSTALL_DIR}/ui
-          {{- end }}
+              value: /home/comfy/ComfyUI
           {{- if .Values.storage.temp.enabled }}
             - name: TEMP_DIR
               value: /home/comfy/temp
           {{- else }}
             - name: TEMP_DIR
-              value: ${INSTALL_DIR}/ui/temp
+              value: ${BASE_DIR}/temp
           {{- end }}
           {{- if .Values.storage.output.enabled }}
             - name: OUTPUT_DIR
               value: /home/comfy/output
           {{- else }}
             - name: OUTPUT_DIR
-              value: ${INSTALL_DIR}/ui/output
+              value: ${BASE_DIR}/output
           {{- end }}
           {{- if .Values.storage.input.enabled }}
             - name: INPUT_DIR
               value: /home/comfy/input
           {{- else }}
             - name: INPUT_DIR
-              value: ${INSTALL_DIR}/ui/input
+              value: ${BASE_DIR}/input
           {{- end }}
           {{- if .Values.storage.user.enabled }}
             - name: USER_DIR
               value: /home/comfy/user
           {{- else }}
             - name: USER_DIR
-              value: ${INSTALL_DIR}/ui/user
+              value: ${BASE_DIR}/user
           {{- end }}
           {{- if .Values.gpu.enabled }}
             - name: GPU_TYPE
@@ -107,13 +100,9 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end}}
           volumeMounts:
-          {{- if .Values.storage.install.enabled }}
-            - name: install
-              mountPath: /home/comfy/install
-          {{- end }}
           {{- if .Values.storage.base.enabled }}
             - name: base
-              mountPath: /home/comfy/base/
+              mountPath: /home/comfy/ComfyUI/
           {{- end }}
           {{- if .Values.storage.temp.enabled }}
             - name: temp
@@ -189,11 +178,6 @@ spec:
                 - MKNOD
         {{- end }}          
       volumes:
-        {{- if .Values.storage.install.enabled }}
-        - name: install
-          persistentVolumeClaim:
-            claimName: install
-        {{- end }}
         {{- if .Values.storage.base.enabled }}
         - name: base
           persistentVolumeClaim:

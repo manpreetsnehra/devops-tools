@@ -7,7 +7,7 @@ LABEL org.opencontainers.image.description="Comfyui with distributed custom Node
 LABEL org.opencontainers.image.licenses="MIT"
 
 RUN apt-get update -y && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y curl python3-virtualenv sudo && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y curl python3-virtualenv sudo git && \
     rm -rf /var/cache/apt/archives /var/lib/apt/lists/*
 
 RUN useradd -u 1000 -G sudo -d /home/comfy comfy \
