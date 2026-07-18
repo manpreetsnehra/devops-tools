@@ -6,9 +6,10 @@ if [[ -z "${TEMP_DIR}" ]];then TEMP_DIR=${BASE_DIR}/temp; fi
 if [[ -z "${INPUT_DIR}" ]];then INPUT_DIR=${BASE_DIR}/input;fi
 if [[ -z "${OUTPUT_DIR}" ]];then OUTPUT_DIR=${BASE_DIR}/output;fi
 if [[ -z "${USER_DIR}" ]];then USER_DIR=${BASE_DIR}/user;fi
+ls -l 
+sudo chown -fR comfy:comfy $BASE_DIR
 
-sudo chown -f comfy:comfy $TEMP_DIR $OUTPUT_DIR $INPUT_DIR $USER_DIR $BASE_DIR
-mkdir -p $TEMP_DIR $OUTPUT_DIR $INPUT_DIR $USER_DIR $
+mkdir -p $BASE_DIR $INPUT_DIR $TEMP_DIR $OUTPUT_DIR $USER_DIR
 
 tar xfz /home/comfy/comfyui.tar.gz -C $BASE_DIR --strip-components=1
 
