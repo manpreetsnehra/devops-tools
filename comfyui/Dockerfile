@@ -6,21 +6,23 @@ LABEL org.opencontainers.image.title="ComyUI"
 LABEL org.opencontainers.image.description="Comfyui with distributed custom Node"
 LABEL org.opencontainers.image.licenses="MIT"
 
-ARG GPU_API_VERSION=cuda
-
 RUN apt-get update -y && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y curl python3-virtualenv && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y curl python3-virtualenv sudo && \
     rm -rf /var/cache/apt/archives /var/lib/apt/lists/*
 
-RUN useradd -u 1000 -d /opt/comfy comfy
-
+RUN useradd -u 1000 -G sudo -d /home/comfy comfy \
+    && echo "%sudo  ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers \
+    && echo "Defaults env_keep += \"DEBIAN_FRONTEND\"" >> /etc/sudoers
+    
 # Defines build arguments for the versions of ComfyUI and ComfyUI Manager to use
-RUN export COMFYUI_VERSION=`curl --silent "https://api.github.com/repos/Comfy-Org/ComfyUI/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'|cut -b 2-` && \
-    export COMFYUI_DISTRIBUTED_VERSION=`curl --silent "https://api.github.com/repos/robertvoy/ComfyUI-Distributed/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'|cut -b 2-`
-
 USER comfy
 
 # Sets the working directory to the ComfyUI directory
-WORKDIR /opt/comfy
+WORKDIR /home/comfy
 
-COPY deploy.sh /opt/comfy/
+COPY --chown=comfy:comfy entrypoint.sh /home/comfy/
+RUN chmod +x entrypoint.sh
+
+EXPOSE 8188
+
+ENTRYPOINT ["/home/comfy/entrypoint.sh"]

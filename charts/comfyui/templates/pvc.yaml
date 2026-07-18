@@ -1,27 +1,29 @@
-{{- with .Values.storage }}
+{{- range $k,$v := .Values.storage }}
+{{- if $v.enabled }}
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: "{{ $.Release.Name }}-{{ . }}"
+  name: {{ $k }}
   namespace: {{ $.Release.Namespace }}
-{{- with .annotations  }}
+{{- with $v.annotations  }}
   annotations:
 {{ toYaml . | indent 4 }}
 {{- end }}
-{{- with .labels  }}
+{{- with $v.labels  }}
   labels:
 {{ toYaml . | indent 4 }}
 {{- end }}
 spec:
   accessModes:
-    - {{ .accessMode | default "ReadWriteOnce"}}
+    - {{ $v.accessMode | default "ReadWriteOnce"}}
   resources:
     requests:
-      storage: {{ .size | quote | default "20Gi" }}
-  {{- if .volumeName }}
-  volumeName: {{ .volumeName }}
+      storage: {{ $v.size | quote | default "20Gi" }}
+  {{- if $v.volumeName }}
+  volumeName: {{ $v.volumeName }}
   {{- end }}
-  {{- if .storageClass }}
-  storageClassName: {{ .storageClass }}
+  {{- if $v.storageClass }}
+  storageClassName: {{ $v.storageClass }}
   {{- end }}
+{{- end }}
 {{- end }}
