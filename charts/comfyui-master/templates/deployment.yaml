@@ -59,10 +59,8 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           env:
-          {{- if .Values.storage.install.enabled }}
             - name: INSTALL_DIR
               value: /home/comfy/install
-          {{- end }}
           {{- if .Values.storage.base.enabled }}
             - name: BASE_DIR
               value: /home/comfy/base
