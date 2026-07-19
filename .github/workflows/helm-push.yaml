@@ -60,6 +60,6 @@ jobs:
         useOCIRegistry: true
         username: ${{ secrets.GITLAB_ACCOUNT }}
         password: ${{ secrets.GITLAB_TOKEN }}
-        registry-url: oci://${{ secrets.GITLAB_REGISTRY_PATH }}/${{ matrix.chart }}
+        registry-url: oci://${{ secrets.GITLAB_K8S_REGISTRY }}/${{ matrix.chart }}
         force: true
         chart-folder: charts/${{ matrix.chart }}

@@ -106,7 +106,7 @@ jobs:
           labels: org.opencontainers.image.created={{commit_date 'YYYY-MM-DDTHH:mm:ss.SSS[Z]'}}
           tags: |
             ghcr.io/${{ github.repository_owner }}/${{ matrix.image }}:latest
-            ${{ secrets.GITLAB_REGISTRY_PATH }}/${{ matrix.image }}:latest
+            ${{ secrets.GITLAB_K8S_REGISTRY }}/${{ matrix.image }}:latest
           platforms: linux/amd64
           cache-from: type=gha
           build-args: CODER_USER=${{ secrets.CODER_USER }}          
