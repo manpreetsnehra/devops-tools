@@ -45,13 +45,10 @@ jobs:
         run: |
           if [[ ${{ steps.changed-files.outputs.all_changed_files }} != '[]' ]]
           then
-            echo changes=${{ steps.changed-files.outputs.all_changed_files }} >> $GITHUB_OUTPUT
+            echo changes='${{ steps.changed-files.outputs.all_changed_files }}'' >> $GITHUB_OUTPUT
           else
             echo changes='["codeserver","comfyui","nginx","whisparr"]' >> $GITHUB_OUTPUT
           fi      
-
-      - name: Debug
-        run: echo ${{ steps.changes.outputs.changes }}
 
   build-n-publish:
     if: contains(github.ref,'master')
@@ -65,7 +62,7 @@ jobs:
       security-events: write
     strategy:
       matrix:
-        image: ${{ fromJSON(needs.changed-images.outputs.images ) }}
+        image: ${{ fromJSON(needs.changed-images.outputs.images) }}
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.image }}
       cancel-in-progress: true               
