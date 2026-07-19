@@ -36,7 +36,6 @@ then
     ${BASE_DIR}/.venv/bin/python ${BASE_DIR}/main.py \
         --enable-cors-header \
         --disable-auto-launch \
-        --base-directory ${BASE_DIR} \
         --temp-directory ${TEMP_DIR} \
         --output-directory ${OUTPUT_DIR} \
         --input-directory ${INPUT_DIR} \
@@ -48,7 +47,6 @@ else
     ${BASE_DIR}/.venv/bin/python ${BASE_DIR}/main.py \
         --enable-cors-header \
         --disable-auto-launch \
-        --base-directory ${BASE_DIR} \
         --temp-directory ${TEMP_DIR} \
         --output-directory ${OUTPUT_DIR} \
         --input-directory ${INPUT_DIR} \
