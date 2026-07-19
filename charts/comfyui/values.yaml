@@ -130,7 +130,7 @@ storage:
   #   annotations
   #   labels:
   #   accessMode: ReadWriteOnce
-  #   size: 20Gi
+  #   size: 21Gi
   #   volumeName
   temp:
     enabled: false
