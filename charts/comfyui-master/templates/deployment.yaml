@@ -64,30 +64,18 @@ spec:
           {{- if .Values.storage.temp.enabled }}
             - name: TEMP_DIR
               value: /home/comfy/temp
-          {{- else }}
-            - name: TEMP_DIR
-              value: ${BASE_DIR}/temp
           {{- end }}
           {{- if .Values.storage.output.enabled }}
             - name: OUTPUT_DIR
               value: /home/comfy/output
-          {{- else }}
-            - name: OUTPUT_DIR
-              value: ${BASE_DIR}/output
           {{- end }}
           {{- if .Values.storage.input.enabled }}
             - name: INPUT_DIR
               value: /home/comfy/input
-          {{- else }}
-            - name: INPUT_DIR
-              value: ${BASE_DIR}/input
           {{- end }}
           {{- if .Values.storage.user.enabled }}
             - name: USER_DIR
               value: /home/comfy/user
-          {{- else }}
-            - name: USER_DIR
-              value: ${BASE_DIR}/user
           {{- end }}
           {{- if .Values.gpu.enabled }}
             - name: GPU_TYPE

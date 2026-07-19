@@ -121,7 +121,7 @@ startupProbe:
   failureThreshold: 30
   periodSeconds: 30
 storage:
-  install:
+  base:
     enabled: false
   #   storageClass:
   #   volumeName:
@@ -130,8 +130,6 @@ storage:
   #   accessMode: ReadWriteOnce
   #   size: 20Gi
   #   volumeName
-  base:
-    enabled: false
   temp:
     enabled: false
   input:

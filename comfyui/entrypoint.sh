@@ -2,16 +2,17 @@
 
 ### Set Vars
 if [[ -z "${BASE_DIR}" ]]; then BASE_DIR=/home/comfy/ComfyUI; fi
-if [[ -z "${TEMP_DIR}" ]];then TEMP_DIR=${BASE_DIR}/temp; fi
-if [[ -z "${INPUT_DIR}" ]];then INPUT_DIR=${BASE_DIR}/input;fi
-if [[ -z "${OUTPUT_DIR}" ]];then OUTPUT_DIR=${BASE_DIR}/output;fi
-if [[ -z "${USER_DIR}" ]];then USER_DIR=${BASE_DIR}/user;fi
-ls -l 
+if [[ ! -z "${TEMP_DIR}" ]];then CUSTOM_TEMP="--temp-directory $TEMP_DIR"; fi
+if [[ ! -z "${INPUT_DIR}" ]];then CUSTOM_INPUT="--input-directory ${INPUT_DIR}";fi
+if [[ ! -z "${OUTPUT_DIR}" ]];then CUSTOM_OUTPUT="--input-directory ${OUTPUT_DIR}";fi
+if [[ ! -z "${USER_DIR}" ]];then CUSTOM_USER="--input-directory ${USER_DIR}";fi
+
 sudo chown -fR comfy:comfy $BASE_DIR
 
 mkdir -p $BASE_DIR $INPUT_DIR $TEMP_DIR $OUTPUT_DIR $USER_DIR
-
-tar xfz /home/comfy/comfyui.tar.gz -C $BASE_DIR --strip-components=1
+unzip -qq /home/comfy/comfyui.zip 
+cp -a ComfyUI-master/* $BASE_DIR
+rm ComfyUI-master -rf
 
 mkdir -p ${BASE_DIR}/custom_nodes/ComfyUI-Distributed
 tar xfz /home/comfy/comfyui-distributed.tar.gz -C ${BASE_DIR}/custom_nodes/ComfyUI-Distributed --strip-components=1
@@ -36,10 +37,10 @@ then
     ${BASE_DIR}/.venv/bin/python ${BASE_DIR}/main.py \
         --enable-cors-header \
         --disable-auto-launch \
-        --temp-directory ${TEMP_DIR} \
-        --output-directory ${OUTPUT_DIR} \
-        --input-directory ${INPUT_DIR} \
-        --user-directory ${USER_DIR} \
+        ${CUSTOM_TEMP} \
+        ${CUSTOM_INPUT} \
+        ${CUSTOM_OUTPUT} \
+        ${CUSTOM_USER} \
         --enable-manager \
         --listen 127.0.0.1 \
         --port 8188
@@ -47,10 +48,10 @@ else
     ${BASE_DIR}/.venv/bin/python ${BASE_DIR}/main.py \
         --enable-cors-header \
         --disable-auto-launch \
-        --temp-directory ${TEMP_DIR} \
-        --output-directory ${OUTPUT_DIR} \
-        --input-directory ${INPUT_DIR} \
-        --user-directory ${USER_DIR} \
+        ${CUSTOM_TEMP} \
+        ${CUSTOM_INPUT} \
+        ${CUSTOM_OUTPUT} \
+        ${CUSTOM_USER} \
         --enable-manager \
         --cpu \
         --listen 127.0.0.1 \
