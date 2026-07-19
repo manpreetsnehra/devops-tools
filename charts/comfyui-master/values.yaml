@@ -117,7 +117,7 @@ startupProbe:
   httpGet:
     path: /
     port: http
-  initialDelaySeconds: 500
+  initialDelaySeconds: 1200
   failureThreshold: 30
   periodSeconds: 30
 storage:

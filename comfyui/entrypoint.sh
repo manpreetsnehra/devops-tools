@@ -32,6 +32,8 @@ else
   ${BASE_DIR}/.venv/bin/pip install --requirement ${BASE_DIR}/requirements.txt --requirement ${BASE_DIR}/manager_requirements.txt
 fi  
 
+${BASE_DIR}/.venv/bin/pip install matrix-nio
+
 if [[ $GPU_TYPE == 'amd' ]] || [[ $GPU_TYPE == 'nvidia' ]]
 then
     ${BASE_DIR}/.venv/bin/python ${BASE_DIR}/main.py \
