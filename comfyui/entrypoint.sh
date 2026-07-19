@@ -7,8 +7,6 @@ if [[ ! -z "${INPUT_DIR}" ]];then CUSTOM_INPUT="--input-directory ${INPUT_DIR}";
 if [[ ! -z "${OUTPUT_DIR}" ]];then CUSTOM_OUTPUT="--input-directory ${OUTPUT_DIR}";fi
 if [[ ! -z "${USER_DIR}" ]];then CUSTOM_USER="--input-directory ${USER_DIR}";fi
 
-sudo chown -fR comfy:comfy $BASE_DIR
-
 mkdir -p $BASE_DIR $INPUT_DIR $TEMP_DIR $OUTPUT_DIR $USER_DIR
 unzip -qq /home/comfy/comfyui.zip 
 cp -a ComfyUI-master/* $BASE_DIR

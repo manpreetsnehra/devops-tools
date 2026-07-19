@@ -30,6 +30,38 @@ spec:
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      initContainers:
+      - name: init-chmod-data
+        image: busybox:latest
+        imagePullPolicy: IfNotPresent
+        command:
+          - sh
+          - -c
+          - |
+            chown -R {{ .Values.securityContext.runAsUser }}:{{ .Values.securityContext.fsGroup }} /home/comfy            
+        securityContext:
+          runAsUser: 0
+        volumeMounts:
+        {{- if .Values.storage.base.enabled }}
+          - name: base
+            mountPath: /home/comfy/ComfyUI/
+        {{- end }}
+        {{- if .Values.storage.temp.enabled }}
+          - name: temp
+            mountPath: /home/comfy/temp/
+        {{- end }}
+        {{- if .Values.storage.output.enabled }}
+          - name: output
+            mountPath: /home/comfy/output/
+        {{- end }}
+        {{- if .Values.storage.input.enabled }}
+          - name: input
+            mountPath: /home/comfy/input/
+        {{- end }}
+        {{- if .Values.storage.user.enabled }}
+          - name: user
+            mountPath: /home/comfy/user/
+        {{- end }}
       containers:
         - name: {{ include "comfyui.fullname" . }}
           {{- with .Values.securityContext }}
