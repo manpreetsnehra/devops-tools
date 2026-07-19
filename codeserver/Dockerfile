@@ -61,7 +61,9 @@ RUN export HELM_VERSION=$(curl -sL "https://api.github.com/repos/helm/helm/relea
     mv /tmp/linux-amd64/helm /usr/local/bin/ && \
     export HELM_CHART_TESTING=$(curl -sL "https://api.github.com/repos/helm/chart-testing/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'|cut -b 2-) && \
     curl -fsSL https://github.com/helm/chart-testing/releases/download/v${HELM_CHART_TESTING}/chart-testing_${HELM_CHART_TESTING}_linux_amd64.tar.gz | tar xfz - -C /tmp && \
-    mv /tmp/ct /usr/local/bin/ && mv /tmp/etc/* /etc/ 
+    mv /tmp/ct /usr/local/bin/ && \
+    mv /tmp/etc /etc/ct && \
+    rm /tmp/* -rf
 
 RUN wget --quiet -O /usr/local/bin/kubectl "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && \
     wget --quiet -O /usr/local/bin/tfsec https://github.com/aquasecurity/tfsec/releases/download/$(curl -sL "https://api.github.com/repos/aquasecurity/tfsec/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')/tfsec-linux-amd64 && \

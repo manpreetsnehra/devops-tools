@@ -18,8 +18,6 @@ RUN apt-get -q update -y \
     ansible-lint \
     ansible \
     nodejs \
-    python3-yaml \
-    python3-kubernetes \
     idn2 \
     libc6 \
     libgcc-s1 \
@@ -33,6 +31,7 @@ RUN apt-get -q update -y \
     curl \
     wget \
     gpg \
+    azure-cli \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -63,7 +62,7 @@ RUN export TOFU_VERSION=$(curl -s "https://api.github.com/repos/opentofu/opentof
     dpkg -i opentofu.deb && rm opentofu.deb
 
 RUN useradd -u 1001 -G sudo,docker -d /home/runner runner \
-    && echo "%  ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers \
+    && echo "%sudo  ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers \
     && echo "Defaults env_keep += \"DEBIAN_FRONTEND\"" >> /etc/sudoers
 
 WORKDIR /home/runner/actions-runner
