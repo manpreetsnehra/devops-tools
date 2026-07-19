@@ -54,9 +54,10 @@ jobs:
     - name: Setup Helm
       uses: azure/setup-helm@v5
 
-    - name: Push Helm Chart to ChartMuseum
+    - name: Push Helm Chart
       uses: bsord/helm-push@v4
       with:
+        useOCIRegistry: true
         username: ${{ secrets.GITLAB_ACCOUNT }}
         password: ${{ secrets.GITLAB_TOKEN }}
         registry-url: ${{ secrets.GITLAB_REGISTRY_PATH }}/${{ matrix.chart }}
