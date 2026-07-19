@@ -10,7 +10,6 @@ if [[ ! -z "${USER_DIR}" ]];then CUSTOM_USER="--input-directory ${USER_DIR}";fi
 mkdir -p $BASE_DIR $INPUT_DIR $TEMP_DIR $OUTPUT_DIR $USER_DIR
 unzip -qq /home/comfy/comfyui.zip 
 cp -a ComfyUI-master/* $BASE_DIR
-rm ComfyUI-master -rf
 
 mkdir -p ${BASE_DIR}/custom_nodes/ComfyUI-Distributed
 tar xfz /home/comfy/comfyui-distributed.tar.gz -C ${BASE_DIR}/custom_nodes/ComfyUI-Distributed --strip-components=1
