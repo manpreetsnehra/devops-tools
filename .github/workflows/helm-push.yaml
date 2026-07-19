@@ -40,7 +40,7 @@ jobs:
       packages: write
     strategy:
       matrix: 
-        chart: ${{ needs.changed-charts.outputs.charts }}
+        chart: ${{ fromJSON(needs.changed-charts.outputs.charts) }}
     steps:
     - name: Checkout
       uses: actions/checkout@v6
