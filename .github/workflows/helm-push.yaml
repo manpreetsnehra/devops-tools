@@ -30,6 +30,9 @@ jobs:
           dir_names_exclude_current_dir: true
           matrix: true
           path: 'charts'
+          
+      - name: Debug
+        run: echo ${{ steps.changed-files.outputs.all_changed_files }}
 
   publish-chart:
     if: contains(github.ref,'master')
