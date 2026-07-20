@@ -39,6 +39,10 @@ jobs:
     name: Publish helm chart
     runs-on: ubuntu-latest
     needs: changed-charts
+    defaults:
+      run:
+        shell: bash
+        working-directory: charts
     permissions:
       contents: write
       packages: write
@@ -54,12 +58,8 @@ jobs:
     - name: Setup Helm
       uses: azure/setup-helm@v5
 
-    - name: Push Helm Chart
-      uses: bsord/helm-push@v4
-      with:
-        useOCIRegistry: true
-        username: ${{ secrets.GITLAB_ACCOUNT }}
-        password: ${{ secrets.GITLAB_TOKEN }}
-        registry-url: oci://${{ secrets.GITLAB_K8S_REGISTRY }}/${{ matrix.chart }}
-        force: true
-        chart-folder: charts
+    - name: Helm Push
+      run: |
+        helm registry login -u ${{ secrets.GITLAB_ACCOUNT }} -p ${{ secrets.GITLAB_TOKEN }} registry.gitlab.com
+        helm package ${{ matrix.chart }}
+        helm push ${{ matrix.chart }} oci://${{ secrets.GITLAB_K8S_REGISTRY }}
