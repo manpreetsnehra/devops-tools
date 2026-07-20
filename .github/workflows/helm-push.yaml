@@ -59,7 +59,7 @@ jobs:
       uses: azure/setup-helm@v5
 
     - name: Push Helm Chart to ChartMuseum
-      uses: bsord/helm-push@4
+      uses: bsord/helm-push@v4
       with:
         username: ${{ secrets.GITLAB_ACCOUNT }}
         password: ${{ secrets.GITLAB_TOKEN }}
