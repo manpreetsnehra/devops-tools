@@ -4,10 +4,7 @@ on:
     branches:
       - master
     paths:
-      - codeserver/**
-      - nginx/**
       - comfyui/**
-      - whisparr/**
       - .github/workflows/others-push.yaml
   schedule:
     - cron: "0 2 * * 0"
@@ -19,7 +16,6 @@ concurrency:
 jobs:
   build-n-publish:
     if: contains(github.ref,'master')
-    needs: changed-images
     name: Build and Release Container Image
     runs-on: ubuntu-latest
     permissions:

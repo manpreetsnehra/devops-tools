@@ -3,6 +3,7 @@ on:
   pull_request:
     paths:
       - comyui/**
+      - .github/workflows/comfyui-pr.yaml
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-others
@@ -11,8 +12,7 @@ concurrency:
 jobs: 
   test-image:
     name: Build and Test Container Images
-    if: github.event_name == 'pull_request' && needs.changed-images.outputs.images != '[]'
-    needs: changed-images
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-comfyui
