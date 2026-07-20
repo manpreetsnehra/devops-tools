@@ -109,7 +109,6 @@ jobs:
             ${{ secrets.GITLAB_K8S_REGISTRY }}/${{ matrix.image }}:latest
           platforms: linux/amd64
           cache-from: type=gha
-          build-args: CODER_USER=${{ secrets.CODER_USER }}          
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@v0.36.0
