@@ -94,7 +94,7 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/deploy:latest
             ${{ secrets.DOCKERHUB_ACCOUNT }}/deploy:latest
             ${{ secrets.ECR_REPO_PATH }}/deploy:latest
-            ${{ secrets.GITLAB_DEPLOY_REGISTRY }}/deploy:latest
+            ${{ secrets.GITLAB_INFRA_REGISTRY }}/deploy:latest
           platforms: linux/amd64
           build-args: |
             HELMFILE_VERSION=${{ steps.versions.outputs.helmfile }}
@@ -112,7 +112,7 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/deploy:${{ steps.meta.outputs.tag }}
             ${{ secrets.DOCKERHUB_ACCOUNT }}/deploy:${{ steps.meta.outputs.tag }}
             ${{ secrets.ECR_REPO_PATH }}/deploy:${{ steps.meta.outputs.tag }}
-            ${{ secrets.GITLAB_DEPLOY_REGISTRY }}/deploy:${{ steps.meta.outputs.tag }}
+            ${{ secrets.GITLAB_INFRA_REGISTRY }}/deploy:${{ steps.meta.outputs.tag }}
           platforms: linux/amd64
           build-args: |
             HELMFILE_VERSION=${{ steps.versions.outputs.helmfile }}
