@@ -58,8 +58,11 @@ jobs:
     - name: Setup Helm
       uses: azure/setup-helm@v5
 
-    - name: Helm Push
-      run: |
-        helm registry login -u ${{ secrets.GITLAB_ACCOUNT }} -p ${{ secrets.GITLAB_TOKEN }} registry.gitlab.com
-        helm package ${{ matrix.chart }}
-        helm push ${{ matrix.chart }}.tgz oci://${{ secrets.GITLAB_K8S_REGISTRY }}
+    - name: Push Helm Chart to ChartMuseum
+      uses: bsord/helm-push@4
+      with:
+        username: ${{ secrets.GITLAB_ACCOUNT }}
+        password: ${{ secrets.GITLAB_TOKEN }}
+        registry-url: 'https://registry.gitlab.com/api/v4/projects/${{ secrets.GITLAB_K8S_PROJECT }}/packages/helm/stable'
+        force: true
+        chart-folder: chart
