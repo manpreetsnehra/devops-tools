@@ -62,4 +62,4 @@ jobs:
       run: |
         helm registry login -u ${{ secrets.GITLAB_ACCOUNT }} -p ${{ secrets.GITLAB_TOKEN }} registry.gitlab.com
         helm package ${{ matrix.chart }}
-        helm push ${{ matrix.chart }} oci://${{ secrets.GITLAB_K8S_REGISTRY }}
+        helm push ${{ matrix.chart }}.tgz oci://${{ secrets.GITLAB_K8S_REGISTRY }}
