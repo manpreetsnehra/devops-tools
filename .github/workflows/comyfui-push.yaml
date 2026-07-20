@@ -4,10 +4,7 @@ on:
     branches:
       - master
     paths:
-      - codeserver/**
-      - nginx/**
       - comfyui/**
-      - whisparr/**
       - .github/workflows/others-push.yaml
   schedule:
     - cron: "0 2 * * 0"
@@ -17,42 +14,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  changed-images:
-    name: Get Changed Files for Testing
-    runs-on: ubuntu-latest
-    outputs:
-      images: ${{ steps.changes.outputs.changes }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-
-      - name: Get changed files
-        id: changed-files
-        uses: tj-actions/changed-files@v47
-        with:
-          dir_names: true
-          dir_names_exclude_current_dir: true
-          matrix: true
-          files_ignore: |
-            charts/**
-            deploy/**
-            .github/**
-      
-      - name: Schedule changes
-        id: changes
-        run: |
-          if [[ ${{ steps.changed-files.outputs.all_changed_files }} != '[]' ]]
-          then
-            echo changes='${{ steps.changed-files.outputs.all_changed_files }}' >> $GITHUB_OUTPUT
-          else
-            echo changes='["codeserver","comfyui","nginx","whisparr"]' >> $GITHUB_OUTPUT
-          fi      
-
   build-n-publish:
     if: contains(github.ref,'master')
-    needs: changed-images
     name: Build and Release Container Image
     runs-on: ubuntu-latest
     permissions:
@@ -60,11 +23,8 @@ jobs:
       pull-requests: read
       packages: write
       security-events: write
-    strategy:
-      matrix:
-        image: ${{ fromJSON(needs.changed-images.outputs.images) }}
     concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.image }}
+      group: ${{ github.workflow }}-${{ github.ref }}-comfyui
       cancel-in-progress: true               
     steps:
       - name: Checkout
@@ -101,19 +61,19 @@ jobs:
       - name: Build and Push images to GitHub
         uses: docker/build-push-action@v7
         with:
-          context: ${{ matrix.image }}
+          context: comfyui
           push: true
           labels: org.opencontainers.image.created={{commit_date 'YYYY-MM-DDTHH:mm:ss.SSS[Z]'}}
           tags: |
-            ghcr.io/${{ github.repository_owner }}/${{ matrix.image }}:latest
-            ${{ secrets.GITLAB_K8S_REGISTRY }}/${{ matrix.image }}:latest
+            ghcr.io/${{ github.repository_owner }}/comfyui:latest
+            ${{ secrets.GITLAB_K8S_REGISTRY }}/comfyui:latest
           platforms: linux/amd64
           cache-from: type=gha
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@v0.36.0
         with:
-          image-ref: 'ghcr.io/${{ github.repository_owner }}/${{ matrix.image }}:latest'
+          image-ref: 'ghcr.io/${{ github.repository_owner }}/comfyui:latest'
           format: 'sarif'
           output: 'trivy-results.sarif'
           hide-progress: true
@@ -127,4 +87,4 @@ jobs:
         uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: 'trivy-results.sarif'
-          category: ${{ matrix.image }}
+          category: comfyui

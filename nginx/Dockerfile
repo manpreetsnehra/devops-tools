@@ -1,9 +1,0 @@
-FROM public.ecr.aws/docker/library/debian:testing
-
-RUN apt-get -q update -y \
-    && apt-get -q install -y nginx libnginx-mod-http-fancyindex git \
-    && rm -rf /var/lib/apt/lists/*
-
-COPY default.conf /etc/nginx/sites-available/default
-EXPOSE 80
-CMD ["nginx","-g", "daemon off;"] 

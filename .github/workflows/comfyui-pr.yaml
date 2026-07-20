@@ -2,56 +2,26 @@ name: Images for Kubernetes pods
 on:
   pull_request:
     paths:
-      - codeserver/**
-      - nginx/**
-      - comfyui/**
-      - whisparr/**
-      - .github/workflows/others-pr.yaml
+      - comyui/**
+      - .github/workflows/comfyui-pr.yaml
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-others
   cancel-in-progress: true
 
 jobs: 
-  changed-images:
-    name: Get Changed Files for Testing
-    runs-on: ubuntu-latest
-    outputs:
-      images: ${{ steps.changed-files.outputs.all_changed_files }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-
-      - name: Get changed files
-        id: changed-files
-        uses: tj-actions/changed-files@v47
-        with:
-          dir_names: true
-          dir_names_exclude_current_dir: true
-          matrix: true
-          files_ignore: |
-            charts/**
-            deploy/**
-            .github/**
-
   test-image:
     name: Build and Test Container Images
-    if: github.event_name == 'pull_request' && needs.changed-images.outputs.images != '[]'
-    needs: changed-images
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.image }}
+      group: ${{ github.workflow }}-${{ github.ref }}-comfyui
       cancel-in-progress: true    
     permissions:
       contents: read
       pull-requests: read
       packages: write
       security-events: write
-    strategy:
-      matrix:
-        image: ${{ fromJSON(needs.changed-images.outputs.images) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -73,13 +43,13 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ github.token }}
 
-      - name: Test Build for ${{ matrix.image }}
+      - name: Test Build for comfyui
         uses: docker/build-push-action@v7
         with:
-          context: ${{ matrix.image }}
+          context: comfyui
           push: true
           sbom: true
-          tags: ghcr.io/${{ github.repository_owner }}/${{ matrix.image }}:test
+          tags: ghcr.io/${{ github.repository_owner }}/comfyui:test
           platforms: linux/amd64
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -87,7 +57,7 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@v0.36.0
         with:
-          image-ref: 'ghcr.io/${{ github.repository_owner }}/${{ matrix.image }}:test'
+          image-ref: 'ghcr.io/${{ github.repository_owner }}/comfyui:test'
           format: 'sarif'
           output: 'trivy-results.sarif'
           hide-progress: true
@@ -100,4 +70,4 @@ jobs:
         uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: 'trivy-results.sarif'
-          category: ${{ matrix.image }}
+          category: comfyui
