@@ -3,7 +3,6 @@ on:
   push:
     paths:
       - 'charts/**'
-      - .github/workflows/helm-push.yaml
     branches:
       - 'master'
 
