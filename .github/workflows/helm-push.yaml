@@ -65,4 +65,4 @@ jobs:
         password: ${{ secrets.GITLAB_TOKEN }}
         registry-url: 'https://registry.gitlab.com/api/v4/projects/${{ secrets.GITLAB_K8S_PROJECT }}/packages/helm/stable'
         force: true
-        chart-folder: chart
+        chart-folder: charts
