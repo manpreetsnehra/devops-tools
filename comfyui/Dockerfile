@@ -20,7 +20,8 @@ USER comfy
 # Sets the working directory to the ComfyUI directory
 WORKDIR /home/comfy
 
-RUN curl -fsSL -o comfyui.zip https://github.com/Comfy-Org/ComfyUI/archive/refs/heads/master.zip
+RUN curl -fsSL -o comfyui.zip https://github.com/Comfy-Org/ComfyUI/archive/refs/heads/master.zip && \
+    unzip -qq /home/comfy/comfyui.zip
 
 #RUN export COMFYUI_VERSION=`curl -fsSL "https://api.github.com/repos/Comfy-Org/ComfyUI/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'|cut -b 2-` && \
 #    curl -fsSL -o comfyui.tar.gz https://github.com/Comfy-Org/ComfyUI/archive/refs/tags/v${COMFYUI_VERSION}.tar.gz && \
