@@ -76,6 +76,12 @@ RUN export RUNNER_CONTAINER_HOOKS_VERSION=$(curl -s "https://api.github.com/repo
     curl -fsSL -o runner-container-hooks.zip https://github.com/actions/runner-container-hooks/releases/download/v${RUNNER_CONTAINER_HOOKS_VERSION}/actions-runner-hooks-k8s-${RUNNER_CONTAINER_HOOKS_VERSION}.zip && \
     unzip ./runner-container-hooks.zip -d ./k8s && \
     rm runner-container-hooks.zip
+    
+RUN export HELM_CHART_TESTING=$(curl -sL "https://api.github.com/repos/helm/chart-testing/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'|cut -b 2-) && \
+    curl -fsSL https://github.com/helm/chart-testing/releases/download/v${HELM_CHART_TESTING}/chart-testing_${HELM_CHART_TESTING}_linux_amd64.tar.gz | tar xfz - -C /tmp && \
+    mv /tmp/ct /usr/local/bin/ && \
+    mv /tmp/etc /etc/ct && \
+    rm /tmp/* -rf
 
 RUN echo "    StrictHostKeyChecking no" | tee -a /etc/ssh/ssh_config
 
