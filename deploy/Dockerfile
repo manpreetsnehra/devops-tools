@@ -31,6 +31,7 @@ RUN apt-get -q update -y \
     curl \
     wget \
     gpg \
+    jq \
     azure-cli \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
