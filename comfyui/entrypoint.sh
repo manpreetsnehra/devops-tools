@@ -40,7 +40,7 @@ then
         ${CUSTOM_OUTPUT} \
         ${CUSTOM_USER} \
         --enable-manager \
-        --listen 127.0.0.1 \
+        --listen 0.0.0.0 \
         --port 8188
 else
     ${BASE_DIR}/.venv/bin/python ${BASE_DIR}/main.py \
@@ -52,6 +52,6 @@ else
         ${CUSTOM_USER} \
         --enable-manager \
         --cpu \
-        --listen 127.0.0.1 \
+        --listen 0.0.0.0 \
         --port 8188
 fi
