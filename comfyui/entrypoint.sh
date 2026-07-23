@@ -26,17 +26,7 @@ ${HOME}/.venv/bin/pip install matrix-nio
 
 if [[ $PERSONAL_CLOUD == 'true' ]]
 then
-  sed -i "s/network_mode = public/network_mode = personal_cloud/" ComfyUI/user/__manager/config.ini 
-fi
-
-if [[ $PERSONAL_CLOUD == 'true' ]]
-then
-  sed -i "s/network_mode = public/network_mode = personal_cloud/" ComfyUI/user/__manager/config.ini 
-fi
-
-if [[ $PERSONAL_CLOUD == 'true' ]]
-then
-  sed -i "s/network_mode = public/network_mode = personal_cloud/" ComfyUI/user/__manager/config.ini 
+  sed -i "s/network_mode = public/network_mode = personal_cloud/" ${BASE_DIR}/user/__manager/config.ini 
 fi
 
 if [[ $GPU_TYPE == 'amd' ]] || [[ $GPU_TYPE == 'nvidia' ]]
