@@ -88,9 +88,10 @@ RUN echo "    StrictHostKeyChecking no" | tee -a /etc/ssh/ssh_config
 
 RUN chown runner:docker /home/runner -R
 
+USER runner
+WORKDIR /home/runner
+
 RUN helm plugin install https://github.com/databus23/helm-diff --verify=false && \
     helmfile init --force && \
     rm .cache -rf
 
-USER runner
-WORKDIR /home/runner
