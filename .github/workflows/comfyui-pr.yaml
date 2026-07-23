@@ -2,7 +2,7 @@ name: Images for Kubernetes pods
 on:
   pull_request:
     paths:
-      - comyui/**
+      - comfyui/**
       - .github/workflows/comfyui-pr.yaml
 
 concurrency:
