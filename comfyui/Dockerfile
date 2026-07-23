@@ -21,7 +21,8 @@ USER comfy
 WORKDIR /home/comfy
 
 RUN curl -fsSL -o comfyui.zip https://github.com/Comfy-Org/ComfyUI/archive/refs/heads/master.zip && \
-    unzip -qq /home/comfy/comfyui.zip
+    unzip -qq /home/comfy/comfyui.zip && \
+    rm comfui.zip 
 
 COPY --chown=comfy:comfy entrypoint.sh /home/comfy/
 RUN chmod +x entrypoint.sh
