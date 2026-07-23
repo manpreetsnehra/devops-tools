@@ -1,3 +1,20 @@
+## v7.0.0
+Image Size on Disk: 
+
+1. OpenTofu 1.12.5
+1. ansible  2.21.1
+1. ansible-lint 26.4.0
+1. helm 4.2.3
+   1. diff 3.15.10
+   1. helm-git 1.3.0
+   1. s3 0.16.3
+   1. secrets 4.7.4
+   1. unittest 1.0.3
+1. node 24.18.0
+1. gitlab-tofu 4.7.0
+1. helmfile 1.7.1
+1. azure-cli 2.88.0 
+
 ## v6.0.2
 Image Size on Disk
 Deploy: 3.69 GB

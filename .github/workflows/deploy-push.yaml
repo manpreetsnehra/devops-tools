@@ -83,7 +83,7 @@ jobs:
       - name: Login to Amazon ECR
         run: aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ secrets.ECR_REPO_PATH }}
 
-      - name: Build and Push images to GitHub
+      - name: Latest Image
         if: contains(github.ref, 'master')
         uses: docker/build-push-action@v7
         with:
@@ -101,7 +101,7 @@ jobs:
             GITLAB_TOFU_VERSION=${{ steps.versions.outputs.gitlab_tofu }}
           cache-from: type=gha
 
-      - name: Build and Push images to GitHub
+      - name: Tagged Image
         if: contains(github.ref, 'tag')
         uses: docker/build-push-action@v7
         with:
