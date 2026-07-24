@@ -1,5 +1,19 @@
 #!/usr/bin/bash -x
 
+if [[ -z "${TEMP_DIR}" ]];then TEMP_DIR="${BASE_DIR}/temp"; fi
+if [[ -z "${INPUT_DIR}" ]];then INPUT_DIR="${BASE_DIR}/input";fi
+if [[ -z "${OUTPUT_DIR}" ]];then OUTPUT_DIR="${BASE_DIR}/output";fi
+if [[ -z "${USER_DIR}" ]];then USER_DIR="${BASE_DIR}/user";fi
+
+sudo chown 1000:1000 -Rf $TEMP_DIR $INPUT_DIR $OUTPUT_DIR $USER_DIR $BASE_DIR
+
+mkdir $USER_DIR
+
+CUSTOM_TEMP="--temp-directory $TEMP_DIR"
+CUSTOM_INPUT="--input-directory $INPUT_DIR"
+CUSTOM_OUTPUT="--output-directory $OUTPUT_DIR"
+CUSTOM_USER="--user-directory $USER_DIR"
+
 ### Set Vars
 if [[ -z "${BASE_DIR}" ]]; then BASE_DIR=/home/comfy/ComfyUI-master; fi
 
@@ -10,12 +24,12 @@ virtualenv ${HOME}/.venv
 if [[ $GPU_TYPE == 'amd' ]]
 then
   ${HOME}/.venv/bin/pip install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm${ROCM_VERSION}
-  ${HOME}/.venv/bin/pip install --requirement ${BASE_DIR}/requirements.txt --requirement ${BASE_DIR}/manager_requirements.txt
+  ${HOME}/.venv/bin/pip install --requirement ${BASE_DIR}/requirements.txt --requirement ${BASE_DIR}/manager_requirements.txt -r ${BASE_DIR}/custom_nodes/ComfyS3/requirements.txt
 elif [[ $GPU_TYPE == 'nvidia' ]]
 then
-  ${HOME}/.venv/bin/pip install --requirement ${BASE_DIR}/requirements.txt --requirement ${BASE_DIR}/manager_requirements.txt --extra-index-url https://download.pytorch.org/whl/${CUDA_VERSION}
+  ${HOME}/.venv/bin/pip install --requirement ${BASE_DIR}/requirements.txt --requirement ${BASE_DIR}/manager_requirements.txt -r ${BASE_DIR}/custom_nodes/ComfyS3/requirements.txt --extra-index-url https://download.pytorch.org/whl/${CUDA_VERSION}
 else
-  ${HOME}/.venv/bin/pip install --requirement ${BASE_DIR}/requirements.txt --requirement ${BASE_DIR}/manager_requirements.txt
+  ${HOME}/.venv/bin/pip install --requirement ${BASE_DIR}/requirements.txt --requirement ${BASE_DIR}/manager_requirements.txt -r ${BASE_DIR}/custom_nodes/ComfyS3/requirements.txt
 fi  
 
 ${HOME}/.venv/bin/pip install matrix-nio
@@ -24,16 +38,6 @@ if [[ $PERSONAL_CLOUD == 'true' ]]
 then
   sed -i "s/network_mode = public/network_mode = personal_cloud/" ${BASE_DIR}/user/__manager/config.ini 
 fi
-
-if [[ -z "${TEMP_DIR}" ]];then TEMP_DIR="${BASE_DIR}/temp"; fi
-if [[ -z "${INPUT_DIR}" ]];then INPUT_DIR="${BASE_DIR}/input";fi
-if [[ -z "${OUTPUT_DIR}" ]];then OUTPUT_DIR="${BASE_DIR}/output";fi
-if [[ -z "${USER_DIR}" ]];then USER_DIR="${BASE_DIR}/user";fi
-mkdir $USER_DIR
-CUSTOM_TEMP="--temp-directory $TEMP_DIR"
-CUSTOM_INPUT="--input-directory ${INPUT_DIR}"
-CUSTOM_OUTPUT="--output-directory ${OUTPUT_DIR}"
-CUSTOM_USER="--user-directory ${USER_DIR}"
 
 if [[ $GPU_TYPE == 'amd' ]] || [[ $GPU_TYPE == 'nvidia' ]]
 then
