@@ -1,5 +1,7 @@
 #!/usr/bin/bash -x
 
+BASE_DIR=/home/comfy/ComfyUI-master
+
 if [[ -z "${TEMP_DIR}" ]];then TEMP_DIR="${BASE_DIR}/temp"; fi
 if [[ -z "${INPUT_DIR}" ]];then INPUT_DIR="${BASE_DIR}/input";fi
 if [[ -z "${OUTPUT_DIR}" ]];then OUTPUT_DIR="${BASE_DIR}/output";fi
