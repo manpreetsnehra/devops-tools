@@ -2,10 +2,6 @@
 
 ### Set Vars
 if [[ -z "${BASE_DIR}" ]]; then BASE_DIR=/home/comfy/ComfyUI-master; fi
-if [[ ! -z "${TEMP_DIR}" ]];then CUSTOM_TEMP="--temp-directory $TEMP_DIR"; fi
-if [[ ! -z "${INPUT_DIR}" ]];then CUSTOM_INPUT="--input-directory ${INPUT_DIR}";fi
-if [[ ! -z "${OUTPUT_DIR}" ]];then CUSTOM_OUTPUT="--input-directory ${OUTPUT_DIR}";fi
-if [[ ! -z "${USER_DIR}" ]];then CUSTOM_USER="--input-directory ${USER_DIR}";fi
 
 ## Setup Virtual Env
 virtualenv ${HOME}/.venv
@@ -28,6 +24,16 @@ if [[ $PERSONAL_CLOUD == 'true' ]]
 then
   sed -i "s/network_mode = public/network_mode = personal_cloud/" ${BASE_DIR}/user/__manager/config.ini 
 fi
+
+if [[ -z "${TEMP_DIR}" ]];then TEMP_DIR="${BASE_DIR}/temp"; fi
+if [[ -z "${INPUT_DIR}" ]];then INPUT_DIR="${BASE_DIR}/input";fi
+if [[ -z "${OUTPUT_DIR}" ]];then OUTPUT_DIR="${BASE_DIR}/output";fi
+if [[ -z "${USER_DIR}" ]];then USER_DIR="${BASE_DIR}/user";fi
+mkdir $USER_DIR
+CUSTOM_TEMP="--temp-directory $TEMP_DIR"
+CUSTOM_INPUT="--input-directory ${INPUT_DIR}"
+CUSTOM_OUTPUT="--output-directory ${OUTPUT_DIR}"
+CUSTOM_USER="--user-directory ${USER_DIR}"
 
 if [[ $GPU_TYPE == 'amd' ]] || [[ $GPU_TYPE == 'nvidia' ]]
 then
