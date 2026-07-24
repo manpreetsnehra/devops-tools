@@ -37,7 +37,12 @@ jobs:
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v6
-        with:          
+        with:
+          images: |
+            ghcr.io/${{ github.repository_owner }}/deploy
+            ${{ secrets.DOCKERHUB_ACCOUNT }}/deploy
+            ${{ secrets.ECR_REPO_PATH }}/deploy
+            ${{ secrets.GITLAB_CONTAINER_REGISTRY }}/deploy
           tags: |
             type=ref,event=tag
             type=edge,event=master
@@ -83,36 +88,13 @@ jobs:
       - name: Login to Amazon ECR
         run: aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ secrets.ECR_REPO_PATH }}
 
-      - name: Latest Image
-        if: contains(github.ref, 'master')
+      - name: Build and Push image
         uses: docker/build-push-action@v7
         with:
           context: deploy
           push: true
           labels: ${{ steps.meta.outputs.labels }}
-          tags: |
-            ghcr.io/${{ github.repository_owner }}/deploy:latest
-            ${{ secrets.DOCKERHUB_ACCOUNT }}/deploy:latest
-            ${{ secrets.ECR_REPO_PATH }}/deploy:latest
-            ${{ secrets.GITLAB_CONTAINER_REGISTRY }}/deploy:latest
-          platforms: linux/amd64
-          build-args: |
-            HELMFILE_VERSION=${{ steps.versions.outputs.helmfile }}
-            GITLAB_TOFU_VERSION=${{ steps.versions.outputs.gitlab_tofu }}
-          cache-from: type=gha
-
-      - name: Tagged Image
-        if: contains(github.ref, 'tag')
-        uses: docker/build-push-action@v7
-        with:
-          context: deploy
-          push: true
-          labels: ${{ steps.meta.outputs.labels }}
-          tags: |
-            ghcr.io/${{ github.repository_owner }}/deploy:${{ steps.meta.outputs.tag }}
-            ${{ secrets.DOCKERHUB_ACCOUNT }}/deploy:${{ steps.meta.outputs.tag }}
-            ${{ secrets.ECR_REPO_PATH }}/deploy:${{ steps.meta.outputs.tag }}
-            ${{ secrets.GITLAB_CONTAINER_REGISTRY }}/deploy:${{ steps.meta.outputs.tag }}
+          tags: ${{ steps.meta.outputs.tags }}
           platforms: linux/amd64
           build-args: |
             HELMFILE_VERSION=${{ steps.versions.outputs.helmfile }}
