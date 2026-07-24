@@ -1,8 +1,6 @@
 name: Image Publish for CI/CD pipelines
 on:
   push:
-    branches:
-      - 'master'
     paths:
       - 'deploy/**'
       - '.github/workflows/deploy-push.yaml'
