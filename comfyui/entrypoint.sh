@@ -5,7 +5,7 @@ if [[ -z "${INPUT_DIR}" ]];then INPUT_DIR="${BASE_DIR}/input";fi
 if [[ -z "${OUTPUT_DIR}" ]];then OUTPUT_DIR="${BASE_DIR}/output";fi
 if [[ -z "${USER_DIR}" ]];then USER_DIR="${BASE_DIR}/user";fi
 
-sudo chown 1000:1000 -Rf $TEMP_DIR $INPUT_DIR $OUTPUT_DIR $USER_DIR $BASE_DIR
+sudo chown 1000:1000 -Rf /home/comfy
 
 mkdir $USER_DIR
 
