@@ -33,6 +33,9 @@ RUN apt-get -q update -y \
     gpg \
     jq \
     azure-cli \
+    python3-boto3 \
+    python3-botocore \
+    python3-kubernetes \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
