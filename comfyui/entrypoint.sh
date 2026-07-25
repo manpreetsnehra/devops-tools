@@ -42,7 +42,7 @@ fi
 if [[ $GPU_TYPE == 'amd' ]] || [[ $GPU_TYPE == 'nvidia' ]]
 then
     ${HOME}/.venv/bin/python ${BASE_DIR}/main.py \
-        --enable-cors-header \
+        --enable-cors-header '*' \
         --disable-auto-launch \
         ${CUSTOM_TEMP} \
         ${CUSTOM_INPUT} \
@@ -53,7 +53,7 @@ then
         --port 8188
 else
     ${HOME}/.venv/bin/python ${BASE_DIR}/main.py \
-        --enable-cors-header \
+        --enable-cors-header '*' \
         --disable-auto-launch \
         ${CUSTOM_TEMP} \
         ${CUSTOM_INPUT} \
