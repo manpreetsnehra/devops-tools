@@ -9,12 +9,12 @@ virtualenv ${HOME}/.venv
 if [[ $GPU_TYPE == 'amd' ]]
 then
   ${HOME}/.venv/bin/pip install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm${ROCM_VERSION}
-  ${HOME}/.venv/bin/pip install --requirement ${BASE_DIR}/requirements.txt --requirement ${BASE_DIR}/manager_requirements.txt matrix-nio
+  ${HOME}/.venv/bin/pip install --requirement ${BASE_DIR}/requirements.txt --requirement ${BASE_DIR}/manager_requirements.txt matrix-nio huggingface_hub
 elif [[ $GPU_TYPE == 'nvidia' ]]
 then
-  ${HOME}/.venv/bin/pip install --requirement ${BASE_DIR}/requirements.txt --requirement ${BASE_DIR}/manager_requirements.txt matrix-nio --extra-index-url https://download.pytorch.org/whl/${CUDA_VERSION}
+  ${HOME}/.venv/bin/pip install --requirement ${BASE_DIR}/requirements.txt --requirement ${BASE_DIR}/manager_requirements.txt matrix-nio huggingface_hub --extra-index-url https://download.pytorch.org/whl/${CUDA_VERSION}
 else
-  ${HOME}/.venv/bin/pip install --requirement ${BASE_DIR}/requirements.txt --requirement ${BASE_DIR}/manager_requirements.txt matrix-nio
+  ${HOME}/.venv/bin/pip install --requirement ${BASE_DIR}/requirements.txt --requirement ${BASE_DIR}/manager_requirements.txt matrix-nio huggingface_hub
 fi  
 
 if [[ $PERSONAL_CLOUD == 'true' ]]
