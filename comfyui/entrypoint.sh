@@ -9,15 +9,13 @@ virtualenv ${HOME}/.venv
 if [[ $GPU_TYPE == 'amd' ]]
 then
   ${HOME}/.venv/bin/pip install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm${ROCM_VERSION}
-  ${HOME}/.venv/bin/pip install --requirement ${BASE_DIR}/requirements.txt --requirement ${BASE_DIR}/manager_requirements.txt -r ${BASE_DIR}/custom_nodes/ComfyS3/requirements.txt
+  ${HOME}/.venv/bin/pip install --requirement ${BASE_DIR}/requirements.txt --requirement ${BASE_DIR}/manager_requirements.txt matrix-nio
 elif [[ $GPU_TYPE == 'nvidia' ]]
 then
-  ${HOME}/.venv/bin/pip install --requirement ${BASE_DIR}/requirements.txt --requirement ${BASE_DIR}/manager_requirements.txt -r ${BASE_DIR}/custom_nodes/ComfyS3/requirements.txt --extra-index-url https://download.pytorch.org/whl/${CUDA_VERSION}
+  ${HOME}/.venv/bin/pip install --requirement ${BASE_DIR}/requirements.txt --requirement ${BASE_DIR}/manager_requirements.txt matrix-nio --extra-index-url https://download.pytorch.org/whl/${CUDA_VERSION}
 else
-  ${HOME}/.venv/bin/pip install --requirement ${BASE_DIR}/requirements.txt --requirement ${BASE_DIR}/manager_requirements.txt -r ${BASE_DIR}/custom_nodes/ComfyS3/requirements.txt
+  ${HOME}/.venv/bin/pip install --requirement ${BASE_DIR}/requirements.txt --requirement ${BASE_DIR}/manager_requirements.txt matrix-nio
 fi  
-
-${HOME}/.venv/bin/pip install matrix-nio
 
 if [[ $PERSONAL_CLOUD == 'true' ]]
 then
@@ -27,14 +25,14 @@ fi
 if [[ $GPU_TYPE == 'amd' ]] || [[ $GPU_TYPE == 'nvidia' ]]
 then
     ${HOME}/.venv/bin/python ${BASE_DIR}/main.py \
-        --enable-cors-header \'*\' \
+        --enable-cors-header "'*'" \
         --disable-auto-launch \
         --enable-manager \
         --listen 0.0.0.0 \
         --port 8188
 else
     ${HOME}/.venv/bin/python ${BASE_DIR}/main.py \
-        --enable-cors-header \'*\' \
+        --enable-cors-header "'*'" \
         --disable-auto-launch \
         --enable-manager \
         --cpu \
