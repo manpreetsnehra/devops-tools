@@ -27,15 +27,6 @@ RUN curl -fsSL -o comfyui.zip https://github.com/Comfy-Org/ComfyUI/archive/refs/
     unzip -qq /home/comfy/comfyui.zip && \
     rm comfyui.zip 
 
-WORKDIR /home/comfy/ComfyUI-master/custom_nodes/
-
-RUN git clone https://github.com/TemryL/ComfyS3.git && \
-    rm ComfyS3/.git -rf
-
-RUN export COMYUI_DISTRIBUTED_VERSION=$(curl -sL "https://api.github.com/repos/robertvoy/ComfyUI-Distributed/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'|cut -b 2-) && \
-    mkdir ComfyUI-Distributed && \
-    curl -fsSL https://github.com/robertvoy/ComfyUI-Distributed/archive/refs/tags/v${COMYUI_DISTRIBUTED_VERSION}.tar.gz  | tar xfz - -C ComfyUI-Distributed --strip-components=1
-
 WORKDIR /home/comfy/ComfyUI-master/
 
 EXPOSE 8188
