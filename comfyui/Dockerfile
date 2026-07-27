@@ -23,11 +23,7 @@ WORKDIR /home/comfy
 COPY --chown=comfy:comfy entrypoint.sh /home/comfy/
 RUN chmod +x entrypoint.sh
 
-RUN curl -fsSL -o comfyui.zip https://github.com/Comfy-Org/ComfyUI/archive/refs/heads/master.zip && \
-    unzip -qq /home/comfy/comfyui.zip && \
-    rm comfyui.zip 
-
-WORKDIR /home/comfy/ComfyUI-master/
+WORKDIR /home/comfy/ComfyUI/
 
 EXPOSE 8188
 
