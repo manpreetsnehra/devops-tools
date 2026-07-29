@@ -23,8 +23,6 @@ WORKDIR /home/comfy
 COPY --chown=comfy:comfy entrypoint.sh /home/comfy/
 RUN chmod +x entrypoint.sh
 
-WORKDIR /home/comfy/ComfyUI/
-
 EXPOSE 8188
 
 ENTRYPOINT ["/home/comfy/entrypoint.sh"]
