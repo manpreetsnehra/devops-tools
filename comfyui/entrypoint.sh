@@ -5,12 +5,6 @@ BASE_DIR=/home/comfy/ComfyUI
 ## Setup Virtual Env
 virtualenv ${HOME}/.venv
 
-## Download and Extract ComfyUI
-if [[ $INSTALL_COMFYUI == "true" ]] || [[ ! -d "${BASE_DIR}/.git" ]]
-then
-  git clone https://github.com/Comfy-Org/ComfyUI.git
-fi
-
 if [[ $TYPE != "worker" ]]
 then
 ## Install Pytorch
