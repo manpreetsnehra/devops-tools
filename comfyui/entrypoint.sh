@@ -7,8 +7,8 @@ then
 fi
 
 cp /home/comfy/update-nodes.sh $BASE_DIR
-source ${BASE_DIR/update-nodes.sh
-}
+source ${BASE_DIR}/update-nodes.sh
+
 if [[ $GPU_TYPE == 'amd' ]] || [[ $GPU_TYPE == 'nvidia' ]]
 then
     ${HOME}/.venv/bin/python ${HOME}/ComfyUI/main.py \
