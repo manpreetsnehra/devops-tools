@@ -21,6 +21,9 @@ USER comfy
 WORKDIR /home/comfy
 
 COPY --chown=comfy:comfy entrypoint.sh /home/comfy/
+COPY --chown=comfy:comfy install-dependencies.sh /home/comfy/
+COPY --chown=comfy:comfy update-nodes.sh /home/comfy/
+
 RUN chmod +x entrypoint.sh
 
 EXPOSE 8188
