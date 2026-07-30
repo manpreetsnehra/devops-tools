@@ -12,6 +12,6 @@ for dir in ${BASE_DIR}/custom_nodes/*
 do
   if [[ -f ${dir}/requirements.txt ]] && [[ $dir != "__pycache__" ]]
   then 
-    ${HOME}/.venv/bin/pip install -r ${dir}/requirements.txt
+    ${VIRTUAL_ENV_DIR}/bin/pip install -r ${dir}/requirements.txt
   fi
 done

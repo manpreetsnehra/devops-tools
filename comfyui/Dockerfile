@@ -7,7 +7,7 @@ LABEL org.opencontainers.image.description="Comfyui with distributed custom Node
 LABEL org.opencontainers.image.licenses="MIT"
 
 RUN apt-get update -y && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y curl python3-virtualenv sudo git git-lfs unzip screen wget aria2 procps && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y curl python3-virtualenv sudo git git-lfs unzip screen wget aria2 procps cron && \
     rm -rf /var/cache/apt/archives /var/lib/apt/lists/*
 
 RUN useradd -u 1000 -G sudo -s /usr/bin/bash -d /home/comfy comfy \
@@ -22,11 +22,9 @@ WORKDIR /home/comfy
 
 RUN git clone https://github.com/Comfy-Org/ComfyUI.git
 
-COPY --chown=comfy:comfy entrypoint.sh /home/comfy/
-COPY --chown=comfy:comfy install-dependencies.sh /home/comfy/
-COPY --chown=comfy:comfy update-nodes.sh /home/comfy/
-
-RUN chmod +x entrypoint.sh
+COPY --chmod=+x --chown=comfy:comfy entrypoint.sh /home/comfy/
+COPY --chmod=+x --chown=comfy:comfy install-dependencies.sh /home/comfy/
+COPY --chmod=+x --chown=comfy:comfy update-nodes.sh /etc/cron.hourly/
 
 EXPOSE 8188
 
