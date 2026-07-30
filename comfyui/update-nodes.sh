@@ -6,7 +6,7 @@ then
 fi
 if [[ -z $BASE_DIR ]]
 then
-  BASE_DIR=/home/comfy/ComfyUI/
+  BASE_DIR=/home/comfy/ComfyUI
 fi
 for dir in ${BASE_DIR}/custom_nodes/*
 do
