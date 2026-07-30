@@ -20,6 +20,8 @@ USER comfy
 # Sets the working directory to the ComfyUI directory
 WORKDIR /home/comfy
 
+RUN git clone https://github.com/Comfy-Org/ComfyUI.git
+
 COPY --chown=comfy:comfy entrypoint.sh /home/comfy/
 COPY --chown=comfy:comfy install-dependencies.sh /home/comfy/
 COPY --chown=comfy:comfy update-nodes.sh /home/comfy/

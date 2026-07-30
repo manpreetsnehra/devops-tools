@@ -1,6 +1,7 @@
 #!/usr/bin/bash -x
 
 BASE_DIR=/home/comfy/ComfyUI
+
 if [[ $TYPE != "worker" ]]
 then
   source ${HOME}/install-dependencies.sh
